@@ -48,7 +48,9 @@
 
     <main>
         <section id="home" class="hero-section">
-            <div class="hero-overlay"></div>
+            <div class="hero-image-container">
+                <div class="hero-image-placeholder">Luxury Hotel Image</div>
+            </div>
             <div class="hero-content">
                 <div class="hero-text">
                     <h2>Experience Unparalleled Luxury</h2>
@@ -74,6 +76,24 @@
                 </div>
             </div>
         </section>
+
+        <div class="availability-bar">
+            <div class="availability-container">
+                <input type="date" class="availability-input" placeholder="Check-in">
+                <div class="availability-divider"></div>
+                <input type="date" class="availability-input" placeholder="Check-out">
+                <div class="availability-divider"></div>
+                <select class="availability-input">
+                    <option value="">Guests</option>
+                    <option value="1">1 Guest</option>
+                    <option value="2">2 Guests</option>
+                    <option value="3">3 Guests</option>
+                    <option value="4">4 Guests</option>
+                </select>
+                <div class="availability-divider"></div>
+                <button class="availability-button">Check Availability</button>
+            </div>
+        </div>
 
         <section id="about" class="about-section">
             <div class="container">
