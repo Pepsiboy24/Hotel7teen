@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel7teen Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .auth-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+        
+        .dashboard {
+            display: none;
+            padding: 2rem;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 0.75rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        
+        .success-message {
+            color: #155724;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 0.75rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .dashboard-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dashboard-card h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        /* Room Grid Styles */
+        .room-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.875rem;
+        }
+
+        .filter-btn:hover {
+            background: #f8f9fa;
+        }
+
+        .filter-btn.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .room-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .room-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .room-card.available {
+            border-color: #28a745;
+            background: linear-gradient(135deg, #f8fff9 0%, #e8f5e8 100%);
+        }
+
+        .room-card.occupied {
+            border-color: #dc3545;
+            background: linear-gradient(135deg, #fff8f8 0%, #ffe8e8 100%);
+        }
+
+        .room-card.maintenance {
+            border-color: #ffc107;
+            background: linear-gradient(135deg, #fffef8 0%, #fff8e8 100%);
+        }
+
+        .room-card.reserved {
+            border-color: #17a2b8;
+            background: linear-gradient(135deg, #f8ffff 0%, #e8f8f8 100%);
+        }
+
+        .room-card.dirty {
+            border-color: #6c757d;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e8e9ea 100%);
+        }
+
+        .room-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .room-number {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .room-status {
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: white;
+        }
+
+        .room-status.available {
+            background: #28a745;
+        }
+
+        .room-status.occupied {
+            background: #dc3545;
+        }
+
+        .room-status.maintenance {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .room-status.reserved {
+            background: #17a2b8;
+        }
+
+        .room-status.dirty {
+            background: #6c757d;
+        }
+
+        .room-details {
+            font-size: 0.875rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .room-type {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .room-price {
+            color: #007bff;
+            font-weight: 600;
+        }
+
+        .room-guest {
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .room-floor {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(0, 0, 0, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .rooms-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .room-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Form -->
+    <div id="loginContainer" class="auth-container">
+        <h2>Admin Login</h2>
+        <div id="messageContainer"></div>
+        <form id="loginForm" class="auth-form">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard">
+        <div class="dashboard-header">
+            <h1>Hotel7teen Admin Dashboard</h1>
+            <div class="user-info">
+                <span id="userDisplay"></span>
+                <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalRooms">-</div>
+                <div class="stat-label">Total Rooms</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="availableRooms">-</div>
+                <div class="stat-label">Available Rooms</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="todayArrivals">-</div>
+                <div class="stat-label">Today's Arrivals</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="occupiedRooms">-</div>
+                <div class="stat-label">Occupied Rooms</div>
+            </div>
+        </div>
+
+        <div class="dashboard-content">
+            <div class="dashboard-card">
+                <h3>Room Status Grid</h3>
+                <div class="room-controls">
+                    <button id="refreshRooms" class="btn btn-primary">Refresh Status</button>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all">All Rooms</button>
+                        <button class="filter-btn" data-filter="available">Available</button>
+                        <button class="filter-btn" data-filter="occupied">Occupied</button>
+                        <button class="filter-btn" data-filter="maintenance">Maintenance</button>
+                    </div>
+                </div>
+                <div id="roomsGrid" class="rooms-grid"></div>
+            </div>
+            <div class="dashboard-card">
+                <h3>Today's Arrivals</h3>
+                <div id="arrivalsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let accessToken = localStorage.getItem('hotel7teen_token');
+
+        // API base URL
+        const API_BASE = '/api';
+
+        // DOM elements
+        const loginContainer = document.getElementById('loginContainer');
+        const dashboard = document.getElementById('dashboard');
+        const loginForm = document.getElementById('loginForm');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const messageContainer = document.getElementById('messageContainer');
+        const userDisplay = document.getElementById('userDisplay');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            if (accessToken) {
+                verifyToken();
+            } else {
+                showLogin();
+            }
+        });
+
+        // Event listeners
+        loginForm.addEventListener('submit', handleLogin);
+        logoutBtn.addEventListener('click', handleLogout);
+        
+        // Room grid event listeners
+        document.getElementById('refreshRooms').addEventListener('click', refreshRooms);
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', handleFilterClick);
+        });
+
+        // Functions
+        function showMessage(message, type = 'error') {
+            messageContainer.innerHTML = `
+                <div class="${type}-message">
+                    ${message}
+                </div>
+            `;
+            setTimeout(() => {
+                messageContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        function showLogin() {
+            loginContainer.style.display = 'block';
+            dashboard.style.display = 'none';
+        }
+
+        function showDashboard() {
+            loginContainer.style.display = 'none';
+            dashboard.style.display = 'block';
+            userDisplay.textContent = `${currentUser.first_name} ${currentUser.last_name} (${currentUser.position})`;
+            loadDashboardData();
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const formData = new FormData(loginForm);
+            const email = formData.get('email');
+            const password = formData.get('password');
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Login failed');
+                }
+
+                currentUser = data.user;
+                accessToken = data.session.access_token;
+                localStorage.setItem('hotel7teen_token', accessToken);
+                
+                showMessage('Login successful!', 'success');
+                setTimeout(() => {
+                    showDashboard();
+                }, 1000);
+
+            } catch (error) {
+                showMessage(error.message);
+            }
+        }
+
+        async function handleLogout() {
+            try {
+                await fetch(`${API_BASE}/auth/logout`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json',
+                    }
+                });
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+
+            currentUser = null;
+            accessToken = null;
+            localStorage.removeItem('hotel7teen_token');
+            showLogin();
+            showMessage('Logged out successfully', 'success');
+        }
+
+        async function verifyToken() {
+            try {
+                const response = await fetch(`${API_BASE}/auth/me`, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Token verification failed');
+                }
+
+                const data = await response.json();
+                currentUser = data.user;
+                showDashboard();
+
+            } catch (error) {
+                console.error('Token verification error:', error);
+                localStorage.removeItem('hotel7teen_token');
+                accessToken = null;
+                showLogin();
+            }
+        }
+
+        async function loadDashboardData() {
+            try {
+                // Load rooms data
+                const roomsResponse = await fetch(`${API_BASE}/management/rooms`, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (roomsResponse.ok) {
+                    const roomsData = await roomsResponse.json();
+                    // Store rooms data for click handler
+                    localStorage.setItem('currentRooms', JSON.stringify(roomsData.rooms));
+                    updateRoomStats(roomsData.rooms);
+                    displayRooms(roomsData.rooms);
+                }
+
+                // Load arrivals data
+                const arrivalsResponse = await fetch(`${API_BASE}/management/arrivals/`, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (arrivalsResponse.ok) {
+                    const arrivalsData = await arrivalsResponse.json();
+                    updateArrivalsStats(arrivalsData);
+                    displayArrivals(arrivalsData.arrivals);
+                }
+
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                showMessage('Error loading dashboard data');
+            }
+        }
+
+        function updateRoomStats(rooms) {
+            const totalRooms = rooms.length;
+            const availableRooms = rooms.filter(room => room.status === 'Available').length;
+            const occupiedRooms = rooms.filter(room => room.status === 'Occupied').length;
+
+            document.getElementById('totalRooms').textContent = totalRooms;
+            document.getElementById('availableRooms').textContent = availableRooms;
+            document.getElementById('occupiedRooms').textContent = occupiedRooms;
+        }
+
+        function updateArrivalsStats(arrivalsData) {
+            document.getElementById('todayArrivals').textContent = arrivalsData.total_arrivals;
+        }
+
+        function displayRooms(rooms) {
+            const roomsGrid = document.getElementById('roomsGrid');
+            const currentFilter = document.querySelector('.filter-btn.active').dataset.filter;
+            
+            const filteredRooms = currentFilter === 'all' 
+                ? rooms 
+                : rooms.filter(room => room.status.toLowerCase() === currentFilter);
+            
+            roomsGrid.innerHTML = filteredRooms.map(room => `
+                <div class="room-card ${room.status.toLowerCase()}" data-room-id="${room.id}">
+                    <div class="room-floor">Floor ${room.floor_number}</div>
+                    <div class="room-header">
+                        <div class="room-number">${room.room_number}</div>
+                        <div class="room-status ${room.status.toLowerCase()}">${room.status}</div>
+                    </div>
+                    <div class="room-details">
+                        <div class="room-type">${room.room_type}</div>
+                        <div class="room-price">$${room.price_per_night}/night</div>
+                        <div>Capacity: ${room.capacity} guests</div>
+                        ${room.current_booking ? `
+                            <div class="room-guest">
+                                <strong>Guest:</strong> ${room.current_booking.guest_name}<br>
+                                <strong>Until:</strong> ${new Date(room.current_booking.check_out_date).toLocaleDateString()}
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+            
+            // Add click handlers for room cards
+            document.querySelectorAll('.room-card').forEach(card => {
+                card.addEventListener('click', () => handleRoomClick(card.dataset.roomId));
+            });
+        }
+
+        function displayArrivals(arrivals) {
+            const arrivalsList = document.getElementById('arrivalsList');
+            if (arrivals.length === 0) {
+                arrivalsList.innerHTML = '<p>No arrivals today</p>';
+                return;
+            }
+
+            arrivalsList.innerHTML = arrivals.map(arrival => `
+                <div style="padding: 0.5rem; border-bottom: 1px solid #eee;">
+                    <strong>${arrival.guest_name}</strong><br>
+                    Room ${arrival.room.number} (${arrival.room.type})<br>
+                    Guests: ${arrival.number_of_guests}
+                </div>
+            `).join('');
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                'Available': '#28a745',
+                'Occupied': '#dc3545',
+                'Maintenance': '#ffc107',
+                'Reserved': '#17a2b8',
+                'Dirty': '#6c757d'
+            };
+            return colors[status] || '#333';
+        }
+
+        // Room grid functions
+        function handleFilterClick(e) {
+            // Update active filter button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            e.target.classList.add('active');
+            
+            // Re-display rooms with new filter
+            loadDashboardData();
+        }
+
+        async function refreshRooms() {
+            const refreshBtn = document.getElementById('refreshRooms');
+            refreshBtn.disabled = true;
+            refreshBtn.textContent = 'Refreshing...';
+            
+            try {
+                await loadDashboardData();
+                showMessage('Room status refreshed successfully', 'success');
+            } catch (error) {
+                showMessage('Error refreshing room status');
+            } finally {
+                refreshBtn.disabled = false;
+                refreshBtn.textContent = 'Refresh Status';
+            }
+        }
+
+        function handleRoomClick(roomId) {
+            // Show room details modal or navigate to room details
+            // For now, just show a simple alert with room info
+            const rooms = JSON.parse(localStorage.getItem('currentRooms') || '[]');
+            const room = rooms.find(r => r.id === roomId);
+            
+            if (room) {
+                const message = `
+                    Room ${room.room_number}
+                    Type: ${room.room_type}
+                    Status: ${room.status}
+                    Price: $${room.price_per_night}/night
+                    Capacity: ${room.capacity} guests
+                    Floor: ${room.floor_number}
+                    ${room.current_booking ? `Guest: ${room.current_booking.guest_name}` : ''}
+                `;
+                alert(message.trim());
+            }
+        }
+
+        // Auto-refresh functionality
+        let autoRefreshInterval = null;
+
+        function startAutoRefresh() {
+            // Refresh every 30 seconds
+            autoRefreshInterval = setInterval(async () => {
+                try {
+                    await loadDashboardData();
+                    console.log('Dashboard auto-refreshed');
+                } catch (error) {
+                    console.error('Auto-refresh error:', error);
+                }
+            }, 30000);
+        }
+
+        function stopAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+                autoRefreshInterval = null;
+            }
+        }
+
+        // Update showDashboard to start auto-refresh
+        const originalShowDashboard = showDashboard;
+        showDashboard = function() {
+            originalShowDashboard();
+            startAutoRefresh();
+        };
+
+        // Update handleLogout to stop auto-refresh
+        const originalHandleLogout = handleLogout;
+        handleLogout = async function() {
+            stopAutoRefresh();
+            await originalHandleLogout();
+        };
+    </script>
+</body>
+</html>
