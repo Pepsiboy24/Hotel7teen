@@ -11,7 +11,7 @@
     <style>
         .booking-container {
             min-height: 100vh;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            background: linear-gradient(135deg, #1a1a1a 0%, #800000 100%);
             padding: 2rem 1rem;
         }
 
@@ -24,7 +24,7 @@
             font-family: 'Playfair Display', serif;
             font-size: 3rem;
             font-weight: 700;
-            color: #d4af37;
+            color: var(--primary-burgundy);
             margin-bottom: 1rem;
         }
 
@@ -72,7 +72,7 @@
         }
 
         .progress-step.active::after {
-            background: #d4af37;
+            background: var(--primary-burgundy);
         }
 
         .progress-step.completed::after {
@@ -94,7 +94,7 @@
         }
 
         .progress-step.active .progress-circle {
-            background: #d4af37;
+            background: var(--primary-burgundy);
             color: white;
         }
 
@@ -161,7 +161,7 @@
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #d4af37;
+            border-color: var(--primary-burgundy);
         }
 
         .form-row {
@@ -185,13 +185,13 @@
         }
 
         .room-card:hover {
-            border-color: #d4af37;
-            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.1);
+            border-color: var(--primary-burgundy);
+            box-shadow: 0 4px 12px rgba(128, 0, 0, 0.1);
         }
 
         .room-card.selected {
-            border-color: #d4af37;
-            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--primary-burgundy);
+            background: rgba(128, 0, 0, 0.1);
         }
 
         .room-card-header {
@@ -212,7 +212,7 @@
             font-family: 'Montserrat', sans-serif;
             font-size: 1.25rem;
             font-weight: 600;
-            color: #d4af37;
+            color: var(--primary-burgundy);
         }
 
         .room-details {
@@ -253,7 +253,7 @@
         .summary-row.total {
             font-weight: 600;
             font-size: 1.1rem;
-            border-top: 2px solid #d4af37;
+            border-top: 2px solid var(--primary-burgundy);
             padding-top: 0.5rem;
             margin-top: 1rem;
         }
@@ -277,12 +277,12 @@
         }
 
         .btn-primary {
-            background: #d4af37;
+            background: var(--primary-burgundy);
             color: white;
         }
 
         .btn-primary:hover {
-            background: #b8941f;
+            background: var(--dark-burgundy);
         }
 
         .btn-secondary {
@@ -306,7 +306,7 @@
 
         .spinner {
             border: 4px solid #f3f3f3;
-            border-top: 4px solid #d4af37;
+            border-top: 4px solid var(--primary-burgundy);
             border-radius: 50%;
             width: 40px;
             height: 40px;
@@ -355,6 +355,18 @@
     </style>
 </head>
 <body>
+    <div class="contact-header">
+        <div class="container">
+            <div class="contact-info-bar">
+                <div class="contact-left">
+                    <span>📞 08064492295 | 08097002925</span>
+                </div>
+                <div class="contact-right">
+                    <span>✉️ info@hotel17teen.com</span>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="booking-container">
         <div class="booking-header">
             <h1>Book Your Stay</h1>
@@ -397,6 +409,12 @@
                         <label for="roomType">Room Type Preference (Optional)</label>
                         <select id="roomType">
                             <option value="">All Room Types</option>
+                            <option value="presidential">Presidential Suite</option>
+                            <option value="crystal">Crystal Suite</option>
+                            <option value="superior">Superior Double</option>
+                            <option value="executive">Executive Double</option>
+                            <option value="luxury">Luxury Suite</option>
+                            <option value="studio">Studio Room</option>
                         </select>
                     </div>
                 </div>
