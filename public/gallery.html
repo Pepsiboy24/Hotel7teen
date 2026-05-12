@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Hotel7teen Luxury Experience</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="header-container"></div>
+
+    <main>
+        <section class="hero-section">
+            <div class="hero-background">
+                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Luxury Hotel Gallery" class="hero-image">
+                <div class="hero-overlay"></div>
+            </div>
+            <div class="container hero-content">
+                <div class="hero-text">
+                    <h2>Gallery</h2>
+                    <p>Experience the luxury and elegance of Hotel7teen through our curated collection of moments</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="gallery-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Explore Our Spaces</h2>
+                    <p>Discover the beauty and sophistication that define Hotel7teen</p>
+                </div>
+                
+                <div class="gallery-categories">
+                    <button class="category-btn active" data-category="all">All</button>
+                    <button class="category-btn" data-category="rooms">Rooms</button>
+                    <button class="category-btn" data-category="dining">Dining</button>
+                    <button class="category-btn" data-category="wellness">Wellness</button>
+                    <button class="category-btn" data-category="events">Events</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="mosaic-gallery">
+            <div class="container">
+                <div class="mosaic-grid" id="mosaicGrid">
+                    <div class="mosaic-item large" data-category="rooms">
+                        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Presidential Suite">
+                        <div class="mosaic-overlay">
+                            <h3>Presidential Suite</h3>
+                            <p>Ultimate luxury with panoramic city views</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mosaic-item tall" data-category="dining">
+                        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Azure Restaurant">
+                        <div class="mosaic-overlay">
+                            <h3>Azure Restaurant</h3>
+                            <p>Michelin-starred dining experience</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mosaic-item" data-category="wellness">
+                        <img src="https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?q=80&w=2070&auto=format&fit=crop" alt="Infinity Pool">
+                        <div class="mosaic-overlay">
+                            <h3>Infinity Pool</h3>
+                            <p>Rooftop relaxation with stunning views</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mosaic-item wide" data-category="rooms">
+                        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Deluxe Suite">
+                        <div class="mosaic-overlay">
+                            <h3>Deluxe Suite</h3>
+                            <p>Elegant comfort and modern amenities</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mosaic-item" data-category="dining">
+                        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Sky Lounge">
+                        <div class="mosaic-overlay">
+                            <h3>Sky Lounge</h3>
+                            <p>Rooftop bar with sunset views</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mosaic-item large" data-category="wellness">
+                        <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Serenity Spa">
+                        <div class="mosaic-overlay">
+                            <h3>Serenity Spa</h3>
+                            <p>Rejuvenating treatments and therapies</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mosaic-item" data-category="events">
+                        <img src="https://images.unsplash.com/photo-1519167758481-8f7d769904c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Ballroom">
+                        <div class="mosaic-overlay">
+                            <h3>Grand Ballroom</h3>
+                            <p>Perfect venue for memorable events</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mosaic-item tall" data-category="rooms">
+                        <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d7c202?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Executive Suite">
+                        <div class="mosaic-overlay">
+                            <h3>Executive Suite</h3>
+                            <p>Business luxury meets comfort</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mosaic-item" data-category="dining">
+                        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Breakfast">
+                        <div class="mosaic-overlay">
+                            <h3>Continental Breakfast</h3>
+                            <p>Morning delights to start your day</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mosaic-item wide" data-category="events">
+                        <img src="https://images.unsplash.com/photo-1469371670267-49f34edce4bb?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Conference Room">
+                        <div class="mosaic-overlay">
+                            <h3>Conference Facilities</h3>
+                            <p>State-of-the-art meeting spaces</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mosaic-item" data-category="wellness">
+                        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Fitness Center">
+                        <div class="mosaic-overlay">
+                            <h3>Fitness Center</h3>
+                            <p>Modern equipment for your workout</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mosaic-item tall" data-category="events">
+                        <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd616ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Garden Wedding">
+                        <div class="mosaic-overlay">
+                            <h3>Garden Weddings</h3>
+                            <p>Romantic outdoor ceremonies</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <script type="module">
+        import { createHeader, initializeHeader } from './components/header.js';
+        import { createFooter, initializeFooter } from './components/footer.js';
+        
+        // Inject header and footer
+        document.getElementById('header-container').innerHTML = createHeader();
+        document.getElementById('footer-container').innerHTML = createFooter();
+        
+        // Initialize components
+        initializeHeader();
+        initializeFooter();
+        
+        // Gallery filtering functionality
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        const mosaicItems = document.querySelectorAll('.mosaic-item');
+        
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update active button
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Filter items
+                const category = btn.dataset.category;
+                mosaicItems.forEach(item => {
+                    if (category === 'all' || item.dataset.category === category) {
+                        item.style.display = 'block';
+                        setTimeout(() => {
+                            item.style.opacity = '1';
+                            item.style.transform = 'scale(1)';
+                        }, 10);
+                    } else {
+                        item.style.opacity = '0';
+                        item.style.transform = 'scale(0.8)';
+                        setTimeout(() => {
+                            item.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            });
+        });
+        
+        // Add smooth transitions for filtering
+        mosaicItems.forEach(item => {
+            item.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

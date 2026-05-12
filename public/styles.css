@@ -17,10 +17,10 @@
 }
 
 /* Typography */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Montserrat:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap');
 
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 16px;
     line-height: 1.6;
     color: var(--primary-charcoal);
@@ -773,6 +773,161 @@ h1, h2, h3, h4, h5, h6 {
     transform: scale(1.02);
 }
 
+/* Story Section */
+.story-section {
+    padding: 8rem 0;
+    background: var(--soft-bone);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.story-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+}
+
+.story-block {
+    margin-bottom: 3rem;
+}
+
+.story-block h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--hotel7teen-burgundy);
+    margin-bottom: 1.5rem;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.story-block p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text-light);
+    margin-bottom: 0;
+}
+
+.story-achievements h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--hotel7teen-burgundy);
+    margin-bottom: 2rem;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.achievements-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.achievement-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--pure-white);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.achievement-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.achievement-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.achievement-content h4 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    color: var(--primary-charcoal);
+    margin-bottom: 0.25rem;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.achievement-content p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin: 0;
+}
+
+/* Team Section */
+.team-section {
+    padding: 8rem 0;
+    background: var(--soft-bone);
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+}
+
+.team-member {
+    text-align: center;
+    padding: 2rem;
+    background: var(--pure-white);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team-member:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+.team-avatar {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 1.5rem;
+    background: linear-gradient(135deg, var(--hotel7teen-burgundy), #600000);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--pure-white);
+    font-size: 2rem;
+    font-weight: bold;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.team-member h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-charcoal);
+    margin-bottom: 0.5rem;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.team-position {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    color: var(--hotel7teen-burgundy);
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.team-bio {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    line-height: 1.6;
+    margin: 0;
+}
+
 /* Rooms Section */
 .rooms-section {
     padding: 8rem 0;
@@ -1022,11 +1177,216 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Inter', sans-serif;
 }
 
+.room-card-action {
+    margin-top: 1rem;
+}
+
+.room-card-action .cta-button {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.85rem;
+    display: inline-block;
+    text-decoration: none;
+}
+
 /* Dining Section */
 .dining-section {
     padding: 8rem 0;
     background: var(--soft-bone);
     border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.dining-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 3rem;
+}
+
+.dining-item {
+    background: var(--pure-white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dining-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+.dining-image {
+    height: 300px;
+    overflow: hidden;
+}
+
+.dining-content {
+    padding: 2rem;
+}
+
+.dining-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--hotel7teen-burgundy);
+    margin-bottom: 1rem;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.dining-content p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+}
+
+.dining-info {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.dining-tag {
+    background: var(--hotel7teen-burgundy);
+    color: var(--pure-white);
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dining-details p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+}
+
+.dining-details strong {
+    color: var(--primary-charcoal);
+    font-weight: 600;
+}
+
+/* Menu Section */
+.menu-section {
+    padding: 8rem 0;
+    background: var(--soft-bone);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 4rem;
+    margin-bottom: 4rem;
+}
+
+.menu-category h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--hotel7teen-burgundy);
+    margin-bottom: 2rem;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.menu-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.menu-item {
+    padding: 1.5rem;
+    background: var(--pure-white);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.menu-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.menu-item h4 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    color: var(--primary-charcoal);
+    margin-bottom: 0.5rem;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.menu-description {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    font-style: italic;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+.menu-price {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    color: var(--hotel7teen-burgundy);
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Dining Experience Section */
+.dining-experience-section {
+    padding: 8rem 0;
+    background: var(--soft-bone);
+}
+
+.experience-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+}
+
+.experience-item {
+    text-align: center;
+    padding: 2rem;
+    background: var(--pure-white);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.experience-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+.experience-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    color: var(--hotel7teen-burgundy);
+}
+
+.experience-item h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-charcoal);
+    margin-bottom: 1rem;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.experience-item p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-light);
 }
 
 .dining-grid {
@@ -1049,15 +1409,37 @@ h1, h2, h3, h4, h5, h6 {
     }
     
     .dining-image {
-        height: 280px;
+        height: 250px;
     }
     
     .dining-content {
-        padding: 2.5rem 2rem;
+        padding: 1.5rem;
     }
     
     .dining-content h3 {
-        font-size: 1.6rem;
+        font-size: 1.5rem;
+    }
+    
+    .menu-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .menu-category h3 {
+        font-size: 1.5rem;
+    }
+    
+    .menu-item {
+        padding: 1rem;
+    }
+    
+    .experience-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .experience-icon {
+        font-size: 2.5rem;
     }
     
     .dining-content p {
@@ -1301,6 +1683,144 @@ h1, h2, h3, h4, h5, h6 {
     border-bottom: 1px solid rgba(0,0,0,0.1);
 }
 
+/* Mosaic Gallery Grid */
+.mosaic-gallery {
+    padding: 4rem 0 6rem;
+    background: var(--soft-bone);
+}
+
+.mosaic-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 260px;
+    gap: 1rem;
+}
+
+.mosaic-item {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.mosaic-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+.mosaic-item.large {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+
+.mosaic-item.wide {
+    grid-column: span 2;
+}
+
+.mosaic-item.tall {
+    grid-row: span 2;
+}
+
+.mosaic-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    display: block;
+}
+
+.mosaic-item:hover img {
+    transform: scale(1.08);
+}
+
+.mosaic-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(26, 26, 27, 0.85) 0%, transparent 100%);
+    padding: 1.5rem;
+    transform: translateY(100%);
+    transition: transform 0.35s ease;
+}
+
+.mosaic-item:hover .mosaic-overlay {
+    transform: translateY(0);
+}
+
+.mosaic-overlay h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--pure-white);
+    margin-bottom: 0.4rem;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.mosaic-overlay p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0;
+    font-weight: 300;
+}
+
+@media (max-width: 900px) {
+    .mosaic-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 220px;
+    }
+
+    .mosaic-item.large {
+        grid-column: span 2;
+        grid-row: span 2;
+    }
+}
+
+@media (max-width: 600px) {
+    .mosaic-grid {
+        grid-template-columns: 1fr;
+        grid-auto-rows: 220px;
+    }
+
+    .mosaic-item.large,
+    .mosaic-item.wide,
+    .mosaic-item.tall {
+        grid-column: span 1;
+        grid-row: span 1;
+    }
+}
+
+.gallery-categories {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+}
+
+.category-btn {
+    padding: 0.75rem 1.5rem;
+    background: var(--pure-white);
+    border: 2px solid var(--hotel7teen-burgundy);
+    color: var(--hotel7teen-burgundy);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 0;
+}
+
+.category-btn:hover,
+.category-btn.active {
+    background: var(--hotel7teen-burgundy);
+    color: var(--pure-white);
+}
+
 .gallery-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -1309,6 +1829,15 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Mobile Gallery Grid */
 @media (max-width: 768px) {
+    .gallery-categories {
+        gap: 0.5rem;
+    }
+    
+    .category-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+    
     .gallery-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
@@ -1829,6 +2358,14 @@ h1, h2, h3, h4, h5, h6 {
     transform: translateY(-2px);
 }
 
+.contact-book-text {
+    margin-bottom: 1.5rem;
+    color: var(--text-light);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
 /* Footer */
 .luxury-footer {
     background: var(--primary-charcoal);
@@ -2042,15 +2579,18 @@ h1, h2, h3, h4, h5, h6 {
     
     .about-section,
     .rooms-section,
+    .about-section,
+    .story-section,
+    .team-section,
+    .rooms-section,
     .dining-section,
     .wellness-section,
-    .gallery-section,
-    .guest-services-section,
     .contact-section {
-        padding: 5rem 0;
+        padding: 4rem 0;
     }
     
     .about-content {
+        grid-template-columns: 1fr;
         gap: 3rem;
     }
     
@@ -2282,4 +2822,532 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--primary-charcoal);
+}
+
+/* Teaser Card Styles */
+.teaser-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.teaser-card {
+    background: var(--pure-white);
+    border-radius: 0;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.teaser-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.teaser-image {
+    position: relative;
+    height: 300px;
+    overflow: hidden;
+}
+
+.teaser-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.teaser-card:hover .teaser-img {
+    transform: scale(1.05);
+}
+
+.teaser-content {
+    padding: 2rem;
+    text-align: center;
+}
+
+.teaser-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--hotel7teen-burgundy);
+    margin-bottom: 1rem;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.teaser-content p {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--text-light);
+    margin-bottom: 2rem;
+}
+
+.teaser-content .cta-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: var(--hotel7teen-burgundy);
+    color: var(--pure-white);
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: 2px solid var(--hotel7teen-burgundy);
+    transition: all 0.3s ease;
+}
+
+.teaser-content .cta-button:hover {
+    background: transparent;
+    color: var(--hotel7teen-burgundy);
+}
+
+/* Active Navigation Link */
+.nav-links a.active {
+    color: var(--hotel7teen-burgundy) !important;
+    border-bottom: 2px solid var(--hotel7teen-burgundy);
+}
+
+/* Responsive Teaser Cards */
+@media (max-width: 768px) {
+    .teaser-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .teaser-content {
+        padding: 1.5rem;
+    }
+    
+    .teaser-content h3 {
+        font-size: 1.5rem;
+    }
+    
+    .teaser-content p {
+        font-size: 1rem;
+    }
+    
+    .teaser-image {
+        height: 250px;
+    }
+}
+/* ============================================================
+   Booking Page Styles
+   ============================================================ */
+
+.booking-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, rgba(0,0,0,0.72), rgba(0,0,0,0.72)),
+                url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    padding: 120px 1rem 4rem;
+}
+
+.booking-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.booking-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--pure-white);
+    margin-bottom: 1rem;
+    letter-spacing: 0.08em;
+}
+
+.booking-header p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.85);
+    font-weight: 300;
+}
+
+.booking-form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.97);
+    border-radius: 0;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+}
+
+.progress-bar {
+    display: flex;
+    background: var(--soft-bone);
+    padding: 2rem;
+    border-bottom: 1px solid var(--subtle-gray);
+}
+
+.progress-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+}
+
+.progress-step::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    right: -50%;
+    width: 100%;
+    height: 2px;
+    background: var(--subtle-gray);
+    z-index: 1;
+}
+
+.progress-step:last-child::after {
+    display: none;
+}
+
+.progress-step.active::after {
+    background: var(--hotel7teen-burgundy);
+}
+
+.progress-step.completed::after {
+    background: #28a745;
+}
+
+.progress-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--subtle-gray);
+    margin: 0 auto 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    position: relative;
+    z-index: 2;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.progress-step.active .progress-circle {
+    background: var(--hotel7teen-burgundy);
+    color: var(--pure-white);
+}
+
+.progress-step.completed .progress-circle {
+    background: #28a745;
+    color: var(--pure-white);
+}
+
+.progress-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.progress-step.active .progress-label,
+.progress-step.completed .progress-label {
+    color: var(--primary-charcoal);
+    font-weight: 500;
+}
+
+.form-steps {
+    padding: 2.5rem;
+}
+
+.form-step {
+    display: none;
+}
+
+.form-step.active {
+    display: block;
+    animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.form-step h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-charcoal);
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--subtle-gray);
+    letter-spacing: 0.1em;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--primary-charcoal);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--subtle-gray);
+    border-radius: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    color: var(--primary-charcoal);
+    background: var(--pure-white);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--hotel7teen-burgundy);
+    box-shadow: 0 0 0 3px rgba(128, 0, 0, 0.08);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.room-selection-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.room-option {
+    border: 2px solid var(--subtle-gray);
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--pure-white);
+}
+
+.room-option:hover {
+    border-color: var(--hotel7teen-burgundy);
+    box-shadow: 0 4px 15px rgba(128,0,0,0.1);
+}
+
+.room-option.selected {
+    border-color: var(--hotel7teen-burgundy);
+    background: rgba(128, 0, 0, 0.04);
+}
+
+.room-option h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary-charcoal);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+}
+
+.room-option .room-price-display {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    color: var(--hotel7teen-burgundy);
+    font-weight: 600;
+}
+
+.room-option .room-features-mini {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.78rem;
+    color: var(--text-light);
+    margin-top: 0.35rem;
+}
+
+.summary-section {
+    background: var(--soft-bone);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-left: 3px solid var(--hotel7teen-burgundy);
+}
+
+.summary-section h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary-charcoal);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.88rem;
+    color: var(--text-light);
+    padding: 0.3rem 0;
+}
+
+.summary-row.total {
+    font-weight: 700;
+    color: var(--primary-charcoal);
+    font-size: 1rem;
+    border-top: 1px solid var(--subtle-gray);
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+}
+
+.form-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--subtle-gray);
+}
+
+.btn {
+    padding: 0.9rem 2rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: var(--hotel7teen-burgundy);
+    color: var(--pure-white);
+}
+
+.btn-primary:hover {
+    background: #600000;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: var(--subtle-gray);
+    color: var(--primary-charcoal);
+}
+
+.btn-secondary:hover {
+    background: #ccc;
+}
+
+.btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.loading {
+    text-align: center;
+    padding: 2rem;
+}
+
+.spinner {
+    border: 3px solid var(--subtle-gray);
+    border-top: 3px solid var(--hotel7teen-burgundy);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 0.9s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+.error-message {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 1rem 1.25rem;
+    border-left: 3px solid #dc3545;
+    margin-bottom: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+}
+
+.success-message {
+    background: #d4edda;
+    color: #155724;
+    padding: 1rem 1.25rem;
+    border-left: 3px solid #28a745;
+    margin-bottom: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .booking-container {
+        padding: 100px 1rem 2rem;
+    }
+
+    .booking-header h1 {
+        font-size: 2rem;
+    }
+
+    .booking-form-container {
+        margin: 0;
+    }
+
+    .progress-bar {
+        padding: 1.25rem;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .progress-step {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.75rem;
+        text-align: left;
+    }
+
+    .progress-step::after {
+        display: none;
+    }
+
+    .progress-circle {
+        margin: 0;
+        flex-shrink: 0;
+    }
+
+    .form-steps {
+        padding: 1.5rem;
+    }
+
+    .form-row,
+    .room-selection-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-navigation {
+        flex-direction: column-reverse;
+        gap: 0.75rem;
+    }
+
+    .btn {
+        width: 100%;
+    }
 }

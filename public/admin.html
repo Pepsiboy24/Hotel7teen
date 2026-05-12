@@ -5,20 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hotel7teen Admin Dashboard</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         .auth-container {
-            max-width: 400px;
-            margin: 100px auto;
-            padding: 2rem;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: 120px auto;
+            padding: 3rem;
+            background: var(--pure-white);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(128, 0, 0, 0.1);
         }
         
         .auth-form {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.5rem;
         }
         
         .form-group {
@@ -28,56 +32,88 @@
         }
         
         .form-group label {
-            font-weight: 600;
-            color: #333;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            color: var(--primary-charcoal);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .form-group input {
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 1rem;
+            border: 2px solid rgba(128, 0, 0, 0.1);
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
             font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background: var(--soft-bone);
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-burgundy);
+            box-shadow: 0 0 0 3px rgba(128, 0, 0, 0.1);
         }
         
         .btn {
-            padding: 0.75rem 1.5rem;
+            padding: 1rem 2rem;
             border: none;
-            border-radius: 4px;
-            font-size: 1rem;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
         }
         
         .btn-primary {
-            background-color: #007bff;
-            color: white;
+            background: var(--primary-burgundy);
+            color: var(--pure-white);
+            box-shadow: 0 4px 6px rgba(128, 0, 0, 0.2);
         }
         
         .btn-primary:hover {
-            background-color: #0056b3;
+            background: var(--dark-burgundy);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px rgba(128, 0, 0, 0.3);
         }
         
         .btn-secondary {
-            background-color: #6c757d;
-            color: white;
+            background: var(--text-light);
+            color: var(--pure-white);
         }
         
         .btn-secondary:hover {
-            background-color: #545b62;
+            background: #5a6268;
+            transform: translateY(-2px);
         }
         
         .dashboard {
             display: none;
-            padding: 2rem;
+            padding: 3rem 0;
+            background: var(--soft-bone);
+            min-height: 100vh;
         }
         
         .dashboard-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #eee;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid rgba(128, 0, 0, 0.1);
+        }
+        
+        .dashboard-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-charcoal);
+            text-transform: none;
+            letter-spacing: normal;
         }
         
         .user-info {
@@ -87,21 +123,25 @@
         }
         
         .error-message {
-            color: #dc3545;
-            background-color: #f8d7da;
+            color: var(--pure-white);
+            background: linear-gradient(135deg, #dc3545, #c82333);
             border: 1px solid #f5c6cb;
-            padding: 0.75rem;
-            border-radius: 4px;
-            margin-bottom: 1rem;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
         }
         
         .success-message {
-            color: #155724;
-            background-color: #d4edda;
+            color: var(--pure-white);
+            background: linear-gradient(135deg, #28a745, #20c997);
             border: 1px solid #c3e6cb;
-            padding: 0.75rem;
-            border-radius: 4px;
-            margin-bottom: 1rem;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
         }
         
         .dashboard-content {
@@ -111,40 +151,67 @@
         }
         
         .dashboard-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background: var(--pure-white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(128, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
         }
         
         .dashboard-card h3 {
-            margin-bottom: 1rem;
-            color: #333;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-charcoal);
+            margin-bottom: 1.5rem;
+            text-transform: none;
+            letter-spacing: normal;
         }
         
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
         }
         
         .stat-card {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 4px;
+            background: linear-gradient(135deg, var(--pure-white), var(--soft-bone));
+            padding: 2rem;
+            border-radius: 12px;
             text-align: center;
+            border: 1px solid rgba(128, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
         
         .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #007bff;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-burgundy);
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 0.5rem;
         }
         
         .stat-label {
-            color: #666;
+            color: var(--text-light);
             margin-top: 0.5rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.8rem;
         }
 
         /* Room Grid Styles */
@@ -177,10 +244,14 @@
             background: #f8f9fa;
         }
 
+        .filter-btn:hover {
+            background: var(--soft-bone);
+        }
+
         .filter-btn.active {
-            background: #007bff;
-            color: white;
-            border-color: #007bff;
+            background: var(--primary-burgundy);
+            color: var(--pure-white);
+            border-color: var(--primary-burgundy);
         }
 
         .rooms-grid {
@@ -191,8 +262,8 @@
         }
 
         .room-card {
-            background: white;
-            border: 2px solid #e9ecef;
+            background: var(--pure-white);
+            border: 2px solid rgba(128, 0, 0, 0.1);
             border-radius: 8px;
             padding: 1rem;
             cursor: pointer;
@@ -203,7 +274,115 @@
 
         .room-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .room-card.available {
+            border-color: #28a745;
+            background: linear-gradient(135deg, #f8fff9 0%, #e8f5e8 100%);
+        }
+
+        .room-card.occupied {
+            border-color: #dc3545;
+            background: linear-gradient(135deg, #fff8f8 0%, #ffe8e8 100%);
+        }
+
+        .room-card.maintenance {
+            border-color: #ffc107;
+            background: linear-gradient(135deg, #fffef8 0%, #fff8e8 100%);
+        }
+
+        .room-card.reserved {
+            border-color: #17a2b8;
+            background: linear-gradient(135deg, #f8ffff 0%, #e8f8f8 100%);
+        }
+
+        .room-card.dirty {
+            border-color: #6c757d;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e8e9ea 100%);
+        }
+
+        .room-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .room-number {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--primary-charcoal);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .room-status {
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--pure-white);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .room-status.available {
+            background: #28a745;
+        }
+
+        .room-status.occupied {
+            background: #dc3545;
+        }
+
+        .room-status.maintenance {
+            background: #ffc107;
+            color: var(--primary-charcoal);
+        }
+
+        .room-status.reserved {
+            background: #17a2b8;
+        }
+
+        .room-status.dirty {
+            background: #6c757d;
+        }
+
+        .room-details {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            line-height: 1.4;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .room-type {
+            font-weight: 600;
+            color: var(--primary-charcoal);
+            margin-bottom: 0.25rem;
+        }
+
+        .room-price {
+            color: var(--primary-burgundy);
+            font-weight: 600;
+        }
+
+        .room-guest {
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .room-floor {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(128, 0, 0, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--pure-white);
         }
 
         .room-card.available {
