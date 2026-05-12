@@ -28,6 +28,10 @@ body {
     overflow-x: hidden;
 }
 
+main {
+    background-color: var(--soft-bone);
+}
+
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
@@ -67,7 +71,7 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0 20px;
 }
 
-/* Premium Navbar with Glassmorphism */
+/* Premium Navbar with Transparent Background */
 .luxury-header {
     background: transparent;
     backdrop-filter: blur(15px);
@@ -77,7 +81,6 @@ h1, h2, h3, h4, h5, h6 {
     top: 0;
     z-index: 1000;
     padding: 1rem 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
 }
 
@@ -97,7 +100,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .logo h1 {
-    color: var(--hotel7teen-burgundy);
+    color: var(--pure-white);
     font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: -5px;
@@ -105,7 +108,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .tagline {
-    color: var(--text-light);
+    color: rgba(255, 255, 255, 0.8);
     font-size: 0.7rem;
     font-weight: 400;
     letter-spacing: 0.1em;
@@ -121,7 +124,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .nav-links a {
-    color: var(--primary-charcoal);
+    color: var(--pure-white);
     text-decoration: none;
     font-weight: 400;
     font-size: 0.95rem;
@@ -150,6 +153,26 @@ h1, h2, h3, h4, h5, h6 {
     width: 100%;
 }
 
+.book-now-btn {
+    padding: 0.8rem 2rem;
+    background: var(--hotel7teen-burgundy);
+    color: var(--pure-white);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.3s ease;
+    border: 1px solid var(--hotel7teen-burgundy);
+    font-family: 'Inter', sans-serif;
+}
+
+.book-now-btn:hover {
+    background: transparent;
+    color: var(--hotel7teen-burgundy);
+    transform: translateY(-2px);
+}
+
 .hamburger {
     display: none;
     flex-direction: column;
@@ -164,129 +187,124 @@ h1, h2, h3, h4, h5, h6 {
     transition: all 0.3s ease;
 }
 
-/* Hero Section with Editorial Layout */
+/* Hero Section with Immersive Background */
+/* --- Hero Section Corrected --- */
 .hero-section {
-    min-height: 100vh;
-    background: var(--soft-bone);
     position: relative;
+    height: 100vh;
+    min-height: 600px;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    padding: 120px 0 60px;
+    /* Pushes content up so buttons don't touch the next section */
+    padding-bottom: 100px; 
 }
 
-.hero-image-container {
-    position: relative;
-    width: 60%;
-    max-width: 800px;
-    height: 500px;
-    margin-bottom: 3rem;
-}
-
-.hero-image-placeholder {
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    background: var(--subtle-gray);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-light);
-    font-size: 1.5rem;
-    font-weight: 300;
-    transition: transform 0.6s ease;
+    z-index: 1; /* Background layer */
 }
 
-.hero-image-placeholder:hover {
-    transform: scale(1.05);
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.7) 0%,
+        rgba(0, 0, 0, 0.4) 100%
+    );
+    z-index: 2; /* Middle layer */
 }
 
 .hero-content {
     position: relative;
+    z-index: 10; /* Top layer: This ensures buttons are clickable */
     text-align: center;
-    max-width: 1000px;
-    padding: 0 20px;
-    margin-top: -8rem;
 }
 
 .hero-text h2 {
-    font-size: 4rem;
-    font-weight: 900;
-    color: var(--primary-charcoal);
-    margin-bottom: 2rem;
-    text-shadow: none;
-    animation: fadeInUp 1s ease;
-    line-height: 1.1;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    margin-bottom: 1.5rem;
+    color: var(--pure-white);
+    text-shadow: 0 4px 15px rgba(0,0,0,0.5); /* Makes text clear */
 }
 
 .hero-text p {
-    font-size: 1.2rem;
-    color: var(--text-light);
-    margin-bottom: 3rem;
-    font-weight: 300;
-    letter-spacing: 0.05em;
-    animation: fadeInUp 1s ease 0.2s both;
-    text-transform: none;
+    font-size: 1.25rem;
+    margin-bottom: 2.5rem;
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .hero-cta {
     display: flex;
-    gap: 2rem;
+    gap: 1.5rem;
     justify-content: center;
-    flex-wrap: wrap;
-    animation: fadeInUp 1s ease 0.4s both;
 }
 
-/* Modern Buttons */
+/* --- Button Clarity Fix --- */
 .cta-button {
-    padding: 1.2rem 3rem;
-    font-size: 1rem;
-    font-weight: 500;
+    padding: 1rem 2.5rem;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    font-weight: 600;
+    transition: all 0.3s ease;
     border: none;
     cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    position: relative;
-    overflow: hidden;
-    border-radius: 0;
+    text-decoration: none;
+    display: inline-block;
 }
 
 .cta-button.primary {
-    background: transparent;
-    color: var(--hotel7teen-burgundy);
-    border: 1px solid var(--hotel7teen-burgundy);
-}
-
-.cta-button.primary:hover {
-    background: var(--hotel7teen-burgundy);
+    background-color: var(--hotel7teen-burgundy);
     color: var(--pure-white);
-    transform: translateY(-2px);
 }
 
 .cta-button.secondary {
-    background: transparent;
-    color: var(--primary-charcoal);
-    border: 1px solid var(--primary-charcoal);
-}
-
-.cta-button.secondary:hover {
-    background: var(--primary-charcoal);
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--pure-white);
     color: var(--pure-white);
-    transform: translateY(-2px);
+    backdrop-filter: blur(5px); /* Makes button clear against image */
 }
 
-/* Check Availability Bar */
+.cta-button:hover {
+    transform: translateY(-5px);
+    background-color: var(--pure-white);
+    color: var(--primary-charcoal);
+}
+
+/* Availability Bar with Backdrop Filter */
 .availability-bar {
-    background: transparent;
-    padding: 2rem 0;
-    border-top: 1px solid #E0DED8;
-    border-bottom: 1px solid #E0DED8;
-    margin: 4rem 0;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(249, 247, 242, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 1.5rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 10;
 }
 
 .availability-container {
-    max-width: 800px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 0 20px;
     display: flex;
@@ -301,25 +319,34 @@ h1, h2, h3, h4, h5, h6 {
     background: transparent;
     font-size: 0.9rem;
     font-family: 'Inter', sans-serif;
-    color: var(--primary-charcoal);
+    color: var(--pure-white);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+}
+
+.availability-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .availability-input:focus {
     outline: none;
 }
 
+.availability-input option {
+    background: var(--primary-charcoal);
+    color: var(--pure-white);
+}
+
 .availability-divider {
     width: 1px;
     height: 30px;
-    background: #E0DED8;
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .availability-button {
     padding: 1rem 2rem;
-    background: transparent;
-    color: var(--hotel7teen-burgundy);
+    background: var(--hotel7teen-burgundy);
+    color: var(--pure-white);
     border: 1px solid var(--hotel7teen-burgundy);
     font-size: 0.9rem;
     font-weight: 500;
@@ -332,8 +359,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .availability-button:hover {
-    background: var(--hotel7teen-burgundy);
-    color: var(--pure-white);
+    background: transparent;
+    color: var(--hotel7teen-burgundy);
 }
 
 .hero-features {
@@ -363,7 +390,7 @@ h1, h2, h3, h4, h5, h6 {
     text-align: center;
     margin-bottom: 4rem;
     padding: 4rem 0 2rem;
-    border-bottom: 1px solid #E0DED8;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
 }
 
 .section-header h2 {
@@ -401,8 +428,8 @@ h1, h2, h3, h4, h5, h6 {
 /* About Section with Increased Whitespace */
 .about-section {
     padding: 8rem 0;
-    background: var(--pure-white);
-    border-top: 1px solid #E0DED8;
+    background: var(--soft-bone);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
 }
 
 .about-content {
@@ -469,11 +496,39 @@ h1, h2, h3, h4, h5, h6 {
     transform: scale(1.02);
 }
 
+/* New Image Classes */
+.room-img,
+.dining-img,
+.gallery-img,
+.about-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.room-card:hover .room-img {
+    transform: scale(1.1);
+}
+
+.dining-item:hover .dining-img {
+    filter: grayscale(0%);
+    transform: scale(1.05);
+}
+
+.gallery-item:hover .gallery-img {
+    filter: grayscale(0%);
+}
+
+.about-img:hover {
+    transform: scale(1.02);
+}
+
 /* Rooms Section */
 .rooms-section {
     padding: 8rem 0;
     background: var(--soft-bone);
-    border-top: 1px solid #E0DED8;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
 }
 
 .rooms-grid {
@@ -599,8 +654,8 @@ h1, h2, h3, h4, h5, h6 {
 /* Dining Section */
 .dining-section {
     padding: 8rem 0;
-    background: var(--pure-white);
-    border-top: 1px solid #E0DED8;
+    background: var(--soft-bone);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
 }
 
 .dining-grid {
@@ -613,13 +668,11 @@ h1, h2, h3, h4, h5, h6 {
     background: var(--pure-white);
     border-radius: 0;
     overflow: hidden;
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
 }
 
 .dining-item:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
 }
 
 .dining-image {
@@ -675,7 +728,7 @@ h1, h2, h3, h4, h5, h6 {
 .wellness-section {
     padding: 8rem 0;
     background: var(--soft-bone);
-    border-top: 1px solid #E0DED8;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
 }
 
 .wellness-content {
@@ -719,7 +772,6 @@ h1, h2, h3, h4, h5, h6 {
 
 .wellness-feature:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
 }
 
 .wellness-feature .feature-icon {
@@ -745,8 +797,8 @@ h1, h2, h3, h4, h5, h6 {
 /* Gallery Section */
 .gallery-section {
     padding: 8rem 0;
-    background: var(--pure-white);
-    border-top: 1px solid #E0DED8;
+    background: var(--soft-bone);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
 }
 
 .gallery-grid {
@@ -759,14 +811,12 @@ h1, h2, h3, h4, h5, h6 {
     height: 280px;
     border-radius: 0;
     overflow: hidden;
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
     cursor: pointer;
 }
 
 .gallery-item:hover {
     transform: scale(1.03);
-    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
 }
 
 .gallery-item img {
@@ -796,7 +846,7 @@ h1, h2, h3, h4, h5, h6 {
 .guest-services-section {
     padding: 8rem 0;
     background: var(--soft-bone);
-    border-top: 1px solid #E0DED8;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
 }
 
 .guest-services-content {
@@ -810,7 +860,6 @@ h1, h2, h3, h4, h5, h6 {
     background: var(--pure-white);
     padding: 4rem 3rem;
     border-radius: 0;
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
 }
 
 .service-form-card h3 {
@@ -928,13 +977,11 @@ h1, h2, h3, h4, h5, h6 {
     background: var(--pure-white);
     padding: 3rem 2.5rem;
     border-radius: 0;
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
 }
 
 .info-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
 }
 
 .info-card h3 {
@@ -978,8 +1025,8 @@ h1, h2, h3, h4, h5, h6 {
 /* Contact Section */
 .contact-section {
     padding: 8rem 0;
-    background: var(--pure-white);
-    border-top: 1px solid #E0DED8;
+    background: var(--soft-bone);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
 }
 
 .contact-content {
@@ -1011,7 +1058,6 @@ h1, h2, h3, h4, h5, h6 {
     background: var(--soft-bone);
     padding: 4rem 3rem;
     border-radius: 0;
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
 }
 
 .contact-form h3 {

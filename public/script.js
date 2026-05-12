@@ -359,19 +359,6 @@ function validateForm(formData) {
     return { valid: true };
 }
 
-// API service placeholder
-const apiService = {
-    // Placeholder for future API calls
-    async bookRoom(bookingData) {
-        try {
-            // This would make an actual API call
-            console.log('Booking data:', bookingData);
-            return { success: true, message: 'Booking successful!' };
-        } catch (error) {
-            return { success: false, message: 'Booking failed. Please try again.' };
-        }
-    }
-};
 
 // Guest Services functionality
 function initializeGuestServices() {
