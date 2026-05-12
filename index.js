@@ -13,6 +13,9 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+// Serve static assets from public folder
+app.use(express.static('public'));
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/bookings', bookingRoutes);
@@ -28,35 +31,21 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Root endpoint
+// Page routes
 app.get('/', (req, res) => {
-  res.json({
-    message: 'Welcome to Hotel7teen API',
-    endpoints: {
-      health: '/api/health',
-      auth: {
-        login: 'POST /api/auth/login',
-        logout: 'POST /api/auth/logout',
-        getCurrentUser: 'GET /api/auth/me',
-        refreshToken: 'POST /api/auth/refresh'
-      },
-      bookings: {
-        checkAvailability: 'POST /api/bookings/check-availability',
-        createBooking: 'POST /api/bookings',
-        getBooking: 'GET /api/bookings/:id'
-      },
-      rooms: {
-        getRoomTypes: 'GET /api/rooms/types',
-        getAvailableRooms: 'GET /api/rooms/available?check_in=YYYY-MM-DD&check_out=YYYY-MM-DD&room_type=Standard',
-        getRoomDetails: 'GET /api/rooms/:id'
-      },
-      management: {
-        updateRoomStatus: 'PUT /api/management/rooms/:roomId/status',
-        getDailyArrivals: 'GET /api/management/arrivals?date=YYYY-MM-DD',
-        getAllRooms: 'GET /api/management/rooms'
-      }
-    }
-  });
+  res.sendFile(__dirname + '/public/index.html');
+});
+
+app.get('/rooms', (req, res) => {
+  res.sendFile(__dirname + '/public/rooms.html');
+});
+
+app.get('/booking', (req, res) => {
+  res.sendFile(__dirname + '/public/booking.html');
+});
+
+app.get('/admin', (req, res) => {
+  res.sendFile(__dirname + '/public/admin.html');
 });
 
 // Error handling middleware

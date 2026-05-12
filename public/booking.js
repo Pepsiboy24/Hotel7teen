@@ -79,7 +79,7 @@ class BookingForm {
 
     async loadRoomTypes() {
         try {
-            const response = await fetch('/api/rooms/types');
+            const response = await fetch('http://localhost:3000/api/rooms/types');
             const data = await response.json();
             
             if (response.ok) {
@@ -146,7 +146,7 @@ class BookingForm {
                 params.append('room_type', this.bookingData.roomType);
             }
             
-            const response = await fetch(`/api/rooms/available?${params}`);
+            const response = await fetch(`http://localhost:3000/api/rooms/available?${params}`);
             const data = await response.json();
             
             this.roomsLoading.style.display = 'none';
@@ -315,7 +315,7 @@ class BookingForm {
             this.nextBtn.disabled = true;
             this.nextBtn.textContent = 'Processing...';
             
-            const response = await fetch('/api/bookings', {
+            const response = await fetch('http://localhost:3000/api/bookings', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
