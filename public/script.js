@@ -176,6 +176,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Guest Services form functionality
     initializeGuestServices();
+
+    // Load rooms dynamically if on rooms page
+    if (window.location.pathname.includes('rooms.html') || document.querySelector('.rooms-grid')) {
+        loadRooms();
+    }
 });
 
 // Notification system
@@ -518,4 +523,100 @@ function showServiceConfirmation(requestData) {
             confirmation.style.display = 'none';
         }, 5000);
     }
+}
+
+// Load rooms dynamically from API
+async function loadRooms() {
+    try {
+        const roomsGrid = document.querySelector('.rooms-grid');
+        if (!roomsGrid) return;
+
+        // Show loading state
+        roomsGrid.innerHTML = '<div class="loading">Loading rooms...</div>';
+
+        const response = await fetch('/api/rooms/types');
+        if (!response.ok) {
+            throw new Error('Failed to fetch room types');
+        }
+
+        const roomTypes = await response.json();
+        
+        // Clear existing content
+        roomsGrid.innerHTML = '';
+
+        // Loop through room types and create room cards
+        roomTypes.forEach((room, index) => {
+            const roomCard = createRoomCard(room, index);
+            roomsGrid.appendChild(roomCard);
+        });
+
+        // Reinitialize scroll animations for new elements
+        initializeScrollAnimations();
+
+    } catch (error) {
+        console.error('Error loading rooms:', error);
+        const roomsGrid = document.querySelector('.rooms-grid');
+        if (roomsGrid) {
+            roomsGrid.innerHTML = '<div class="error">Failed to load rooms. Please try again later.</div>';
+        }
+    }
+}
+
+// Create room card element
+function createRoomCard(room, index) {
+    const roomCard = document.createElement('div');
+    
+    // Add premium class for first room (most expensive)
+    const isPremium = index === room.length - 1;
+    const premiumClass = isPremium ? ' premium' : '';
+    
+    // Parse amenities from JSON
+    const amenities = Array.isArray(room.amenities) ? room.amenities : [];
+    
+    roomCard.className = `room-card${premiumClass}`;
+    roomCard.innerHTML = `
+        <div class="room-image">
+            ${isPremium ? '<div class="room-badge">Premium</div>' : ''}
+            <img src="${room.image_url}" alt="${room.name}" class="room-img">
+        </div>
+        <div class="room-content">
+            <h3>${room.name}</h3>
+            <p>${room.description}</p>
+            <div class="room-features">
+                ${amenities.slice(0, 3).map(amenity => `<span>${amenity}</span>`).join('')}
+            </div>
+            <div class="room-price">
+                <span class="price">$${room.price_per_night}</span>
+                <span class="price-unit">per night</span>
+            </div>
+            <div class="room-card-action">
+                <a href="booking.html?type=${room.id}" class="cta-button primary">Book Now</a>
+            </div>
+        </div>
+    `;
+    
+    return roomCard;
+}
+
+// Initialize scroll animations for dynamically loaded content
+function initializeScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, observerOptions);
+
+    // Observe new room cards for scroll animations
+    const roomCards = document.querySelectorAll('.room-card:not(.scroll-reveal)');
+    roomCards.forEach(card => {
+        card.classList.add('scroll-reveal');
+        observer.observe(card);
+    });
 }

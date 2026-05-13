@@ -1,21 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const supabase = require('../config/database');
+const { supabase } = require('../config/database');
 
 // Get all available room types with pricing
 router.get('/types', async (req, res) => {
   try {
-    const { data: rooms, error } = await supabase
-      .from('rooms')
+    const { data: roomTypes, error } = await supabase
+      .from('room_types')
       .select(`
-        room_type,
-        price_per_night,
-        capacity,
+        id,
+        name,
         description,
-        amenities,
-        status
+        price_per_night,
+        image_url,
+        capacity,
+        amenities
       `)
-      .eq('status', 'Available')
       .order('price_per_night', { ascending: true });
 
     if (error) {
@@ -25,28 +25,7 @@ router.get('/types', async (req, res) => {
       });
     }
 
-    // Group by room type and get unique types with their details
-    const roomTypes = {};
-    rooms.forEach(room => {
-      if (!roomTypes[room.room_type]) {
-        roomTypes[room.room_type] = {
-          type: room.room_type,
-          price_per_night: room.price_per_night,
-          capacity: room.capacity,
-          description: room.description,
-          amenities: room.amenities,
-          available_rooms: 0
-        };
-      }
-      roomTypes[room.room_type].available_rooms++;
-    });
-
-    const result = Object.values(roomTypes);
-
-    res.json({
-      room_types: result,
-      total_types: result.length
-    });
+    res.json(roomTypes);
 
   } catch (error) {
     console.error('Server error:', error);

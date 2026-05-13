@@ -79,15 +79,16 @@ class BookingForm {
 
     async loadRoomTypes() {
         try {
-            const response = await fetch('http://localhost:3000/api/rooms/types');
+            const response = await fetch('/api/rooms/types');
             const data = await response.json();
             
             if (response.ok) {
                 this.roomTypeSelect.innerHTML = '<option value="">All Room Types</option>';
-                data.room_types.forEach(roomType => {
+                // New API returns array directly, not data.room_types
+                data.forEach(roomType => {
                     const option = document.createElement('option');
-                    option.value = roomType.type;
-                    option.textContent = `${roomType.type} - $${roomType.price_per_night}/night`;
+                    option.value = roomType.id;
+                    option.textContent = `${roomType.name} - $${roomType.price_per_night}/night`;
                     this.roomTypeSelect.appendChild(option);
                 });
             }
