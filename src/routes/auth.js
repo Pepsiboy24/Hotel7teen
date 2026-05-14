@@ -196,6 +196,94 @@ router.get('/me', async (req, res) => {
 });
 
 /**
+ * Register new staff member
+ * POST /api/auth/register
+ * Body: { email, password, first_name, last_name, position }
+ */
+router.post('/register', async (req, res) => {
+  try {
+    const { email, password, first_name, last_name, position } = req.body;
+
+    // Validate input
+    if (!email || !password || !first_name || !last_name || !position) {
+      return res.status(400).json({
+        error: 'Missing required fields',
+        message: 'All fields are required'
+      });
+    }
+
+    // Check if staff member already exists
+    const { data: existingStaff, error: checkError } = await supabase
+      .from('staff')
+      .select('email')
+      .eq('email', email)
+      .single();
+
+    if (existingStaff) {
+      return res.status(409).json({
+        error: 'User already exists',
+        message: 'A staff member with this email already exists'
+      });
+    }
+
+    // Create Supabase auth user
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (authError) {
+      return res.status(400).json({
+        error: 'Authentication failed',
+        message: authError.message || 'Failed to create auth user'
+      });
+    }
+
+    // Create staff record
+    const { data: staffData, error: staffError } = await supabase
+      .from('staff')
+      .insert({
+        email,
+        first_name,
+        last_name,
+        position,
+        is_active: true,
+        hire_date: new Date().toISOString(),
+        auth_user_id: authData.user.id
+      })
+      .select()
+      .single();
+
+    if (staffError) {
+      // Rollback: delete the auth user if staff creation fails
+      await supabase.auth.admin.deleteUser(authData.user.id);
+      return res.status(500).json({
+        error: 'Staff creation failed',
+        message: 'Failed to create staff record'
+      });
+    }
+
+    res.status(201).json({
+      message: 'Registration successful',
+      user: {
+        id: staffData.id,
+        email: staffData.email,
+        first_name: staffData.first_name,
+        last_name: staffData.last_name,
+        position: staffData.position
+      }
+    });
+
+  } catch (error) {
+    console.error('Registration error:', error);
+    res.status(500).json({
+      error: 'Registration failed',
+      message: 'Internal server error during registration'
+    });
+  }
+});
+
+/**
  * Refresh access token
  * POST /api/auth/refresh
  * Body: { refresh_token }
