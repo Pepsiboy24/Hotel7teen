@@ -7,7 +7,7 @@ const authRoutes = require('./src/routes/auth');
 const roomsRoutes = require('./src/routes/rooms');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000 || 10000;
 
 // Middleware
 app.use(cors());

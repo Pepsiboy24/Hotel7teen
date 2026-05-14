@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const supabase = require('../config/database');
+const { supabase } = require('../config/database');
 
 // Check room availability before booking
 router.post('/check-availability', async (req, res) => {
