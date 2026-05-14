@@ -1,16 +1,22 @@
-// DOM Content Loaded Event
-document.addEventListener('DOMContentLoaded', function() {
-    // Hamburger menu functionality
+// ============================================================
+//  Hotel7teen — script.js
+//  Single, conflict-free script for all shared page behaviour.
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    // --------------------------------------------------------
+    // 1. Hamburger menu
+    // --------------------------------------------------------
     const hamburger = document.querySelector('.hamburger');
-    const navLinks = document.querySelector('.nav-links');
-    
+    const navLinks  = document.querySelector('.nav-links');
+
     if (hamburger && navLinks) {
-        hamburger.addEventListener('click', function() {
+        hamburger.addEventListener('click', function () {
             hamburger.classList.toggle('active');
             navLinks.classList.toggle('active');
         });
-        
-        // Close mobile menu when clicking on a link
+
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 hamburger.classList.remove('active');
@@ -19,574 +25,415 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Smooth scrolling for navigation links
-    const allNavLinks = document.querySelectorAll('.nav-links a, .footer-section a');
-    
-    allNavLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            const targetId = this.getAttribute('href');
-            if (targetId && targetId.startsWith('#')) {
+    // --------------------------------------------------------
+    // 2. Smooth-scroll for in-page anchor links ONLY
+    //    Non-anchor hrefs (rooms.html, booking.html etc.) are
+    //    left completely untouched so navigation still works.
+    // --------------------------------------------------------
+    document.querySelectorAll('.nav-links a, .footer-section a').forEach(link => {
+        link.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            if (href && href.startsWith('#')) {
                 e.preventDefault();
-                const targetSection = document.querySelector(targetId);
-                if (targetSection) {
-                    const headerHeight = document.querySelector('.luxury-header').offsetHeight;
-                    const targetPosition = targetSection.offsetTop - headerHeight;
-                    
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
-                    });
+                const target = document.querySelector(href);
+                if (target) {
+                    const headerHeight = document.querySelector('.luxury-header')?.offsetHeight || 0;
+                    window.scrollTo({ top: target.offsetTop - headerHeight, behavior: 'smooth' });
                 }
             }
         });
     });
 
-    // Enhanced header scroll effect
+    // --------------------------------------------------------
+    // 3. Single merged scroll handler (header + parallax)
+    //    One debounced listener instead of three separate ones.
+    // --------------------------------------------------------
     const header = document.querySelector('.luxury-header');
-    let lastScrollY = window.scrollY;
-    
-    window.addEventListener('scroll', function() {
-        const currentScrollY = window.scrollY;
-        
-        if (currentScrollY > 100) {
-            header.style.background = 'linear-gradient(135deg, rgba(26,26,26,0.98) 0%, rgba(44,44,44,0.98) 100%)';
-            header.style.backdropFilter = 'blur(15px)';
-            header.style.boxShadow = '0 5px 20px rgba(0,0,0,0.3)';
-        } else {
-            header.style.background = 'linear-gradient(135deg, rgba(26,26,26,0.95) 0%, rgba(44,44,44,0.95) 100%)';
-            header.style.backdropFilter = 'blur(10px)';
-            header.style.boxShadow = 'none';
+
+    window.addEventListener('scroll', debounce(function () {
+        const scrollY = window.scrollY;
+
+        // Header background
+        if (header) {
+            if (scrollY > 100) {
+                header.style.background     = 'linear-gradient(135deg, rgba(26,26,26,0.98) 0%, rgba(44,44,44,0.98) 100%)';
+                header.style.backdropFilter = 'blur(15px)';
+                header.style.boxShadow      = '0 5px 20px rgba(0,0,0,0.3)';
+            } else {
+                header.style.background     = 'linear-gradient(135deg, rgba(26,26,26,0.95) 0%, rgba(44,44,44,0.95) 100%)';
+                header.style.backdropFilter = 'blur(10px)';
+                header.style.boxShadow      = 'none';
+            }
         }
-        
-        lastScrollY = currentScrollY;
+
+        // Hero parallax
+        const heroContent = document.querySelector('.hero-content');
+        const heroOverlay = document.querySelector('.hero-overlay');
+        if (heroContent && heroOverlay) {
+            heroContent.style.transform = `translateY(${scrollY * 0.5}px)`;
+            heroOverlay.style.transform = `translateY(${scrollY * 0.15}px)`;
+        }
+    }, 16), { passive: true });
+
+    // --------------------------------------------------------
+    // 4. Scroll-reveal — single IntersectionObserver, fires once
+    // --------------------------------------------------------
+    const revealObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll(
+        '.room-card, .dining-item, .wellness-feature, .gallery-item, .contact-item, .teaser-card, .featured-item'
+    ).forEach(el => {
+        el.classList.add('scroll-reveal');
+        revealObserver.observe(el);
     });
 
-    // CTA Button functionality
-    const ctaButtons = document.querySelectorAll('.cta-button');
-    ctaButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            if (this.classList.contains('primary')) {
-                // Scroll to contact section for booking
-                const contactSection = document.querySelector('#contact');
-                if (contactSection) {
-                    const headerHeight = document.querySelector('.luxury-header').offsetHeight;
-                    const targetPosition = contactSection.offsetTop - headerHeight;
-                    
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            } else if (this.classList.contains('secondary')) {
-                // Virtual tour placeholder
-                showNotification('Virtual tour coming soon!', 'info');
-            }
+    // --------------------------------------------------------
+    // 5. Gallery lightbox placeholder
+    // --------------------------------------------------------
+    document.querySelectorAll('.gallery-item').forEach(item => {
+        item.addEventListener('click', function () {
+            const label = this.querySelector('.image-placeholder')?.textContent;
+            if (label) showNotification(`Viewing: ${label}`, 'info');
         });
     });
 
-    // Contact form handling
+    // --------------------------------------------------------
+    // 6. Contact / reservation form
+    // --------------------------------------------------------
     const contactForm = document.querySelector('.contact-form form');
     if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
+        contactForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            
-            const formData = new FormData(this);
-            const data = Object.fromEntries(formData);
-            
-            // Basic validation
-            const validation = validateForm(data);
+
+            const data       = Object.fromEntries(new FormData(this));
+            const validation = validateContactForm(data);
             if (!validation.valid) {
                 showNotification(validation.message, 'error');
                 return;
             }
-            
-            // Show loading state
+
             const submitBtn = this.querySelector('.submit-btn');
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Sending...';
-            submitBtn.disabled = true;
-            
-            // Simulate API call
+            const origText  = submitBtn.textContent;
+            submitBtn.textContent = 'Sending\u2026';
+            submitBtn.disabled    = true;
+
             setTimeout(() => {
-                showNotification('Reservation request sent successfully! We will contact you soon.', 'success');
+                showNotification('Reservation request sent! We will contact you soon.', 'success');
                 this.reset();
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
+                submitBtn.textContent = origText;
+                submitBtn.disabled    = false;
             }, 2000);
         });
     }
 
-    // Scroll reveal animations
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-            }
-        });
-    }, observerOptions);
-
-    // Observe elements for scroll animations
-    const animateElements = document.querySelectorAll('.room-card, .dining-item, .wellness-feature, .gallery-item, .contact-item');
-    animateElements.forEach(element => {
-        element.classList.add('scroll-reveal');
-        observer.observe(element);
-    });
-
-    // Gallery lightbox functionality
-    const galleryItems = document.querySelectorAll('.gallery-item');
-    galleryItems.forEach(item => {
-        item.addEventListener('click', function() {
-            const placeholder = this.querySelector('.image-placeholder').textContent;
-            showNotification(`Viewing: ${placeholder}`, 'info');
-        });
-    });
-
-    // Parallax effect for hero section
-    window.addEventListener('scroll', function() {
-        const scrolled = window.pageYOffset;
-        const heroContent = document.querySelector('.hero-content');
-        const heroOverlay = document.querySelector('.hero-overlay');
-        
-        if (heroContent && heroOverlay) {
-            const speed = 0.5;
-            heroContent.style.transform = `translateY(${scrolled * speed}px)`;
-            heroOverlay.style.transform = `translateY(${scrolled * speed * 0.3}px)`;
-        }
-    });
-
-    // Room card hover effects
-    const roomCards = document.querySelectorAll('.room-card');
-    roomCards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-15px) scale(1.02)';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0) scale(1)';
-        });
-    });
-
-    // Initialize tooltips for features
-    initializeTooltips();
-
-    // Guest Services form functionality
+    // --------------------------------------------------------
+    // 7. Guest Services form
+    // --------------------------------------------------------
     initializeGuestServices();
 
-    // Load rooms dynamically if on rooms page
+    // --------------------------------------------------------
+    // 8. Rooms page — load cards dynamically
+    // --------------------------------------------------------
     if (window.location.pathname.includes('rooms.html') || document.querySelector('.rooms-grid')) {
         loadRooms();
     }
 });
 
-// Notification system
-function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.textContent = message;
-    
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 1rem 1.5rem;
-        border-radius: 8px;
-        color: white;
-        font-weight: 500;
-        z-index: 10000;
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-        max-width: 300px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    `;
-    
-    // Set background color based on type
-    const colors = {
-        success: 'linear-gradient(135deg, #28a745, #20c997)',
-        error: 'linear-gradient(135deg, #dc3545, #c82333)',
-        info: 'linear-gradient(135deg, #17a2b8, #138496)',
-        warning: 'linear-gradient(135deg, #ffc107, #e0a800)'
+
+// ============================================================
+//  Utility — debounce
+// ============================================================
+function debounce(func, wait) {
+    let timeout;
+    return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
     };
-    
-    notification.style.background = colors[type] || colors.info;
-    
-    document.body.appendChild(notification);
-    
-    // Animate in
-    setTimeout(() => {
-        notification.style.transform = 'translateX(0)';
-    }, 100);
-    
-    // Remove after 3 seconds
-    setTimeout(() => {
-        notification.style.transform = 'translateX(100%)';
-        setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 300);
-    }, 3000);
 }
 
-// Enhanced form validation
-function validateForm(formData) {
-    // Required fields validation
-    const requiredFields = ['Full Name', 'Email Address', 'Phone Number'];
-    for (const field of requiredFields) {
-        const input = document.querySelector(`input[placeholder="${field}"]`);
-        if (input && !input.value.trim()) {
-            return { valid: false, message: `${field} is required` };
-        }
-    }
-    
-    // Email validation
+// ============================================================
+//  Utility — scroll to top (exposed globally)
+// ============================================================
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+
+// ============================================================
+//  Notification toast
+// ============================================================
+function showNotification(message, type = 'info') {
+    const colors = {
+        success: 'linear-gradient(135deg, #28a745, #20c997)',
+        error:   'linear-gradient(135deg, #dc3545, #c82333)',
+        info:    'linear-gradient(135deg, #17a2b8, #138496)',
+        warning: 'linear-gradient(135deg, #ffc107, #e0a800)'
+    };
+
+    const el = document.createElement('div');
+    el.className   = `notification ${type}`;
+    el.textContent = message;
+    Object.assign(el.style, {
+        position:     'fixed',
+        top:          '20px',
+        right:        '20px',
+        padding:      '1rem 1.5rem',
+        borderRadius: '0',
+        color:        'white',
+        fontWeight:   '500',
+        fontFamily:   "'Montserrat', sans-serif",
+        fontSize:     '0.9rem',
+        zIndex:       '10000',
+        transform:    'translateX(120%)',
+        transition:   'transform 0.3s ease',
+        maxWidth:     '320px',
+        boxShadow:    '0 5px 20px rgba(0,0,0,0.25)',
+        background:   colors[type] || colors.info
+    });
+
+    document.body.appendChild(el);
+    requestAnimationFrame(() => { el.style.transform = 'translateX(0)'; });
+
+    setTimeout(() => {
+        el.style.transform = 'translateX(120%)';
+        setTimeout(() => el.remove(), 300);
+    }, 3500);
+}
+
+
+// ============================================================
+//  Form validation
+// ============================================================
+
+/**
+ * validateContactForm
+ * Used by the contact / reservation form on the homepage.
+ */
+function validateContactForm(data) {
+    const nameInput  = document.querySelector('input[placeholder="Full Name"]');
     const emailInput = document.querySelector('input[type="email"]');
+    const phoneInput = document.querySelector('input[type="tel"]');
+
+    if (nameInput && !nameInput.value.trim()) {
+        return { valid: false, message: 'Full name is required' };
+    }
     if (emailInput) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(emailInput.value)) {
+        if (!emailInput.value.trim()) {
+            return { valid: false, message: 'Email address is required' };
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value)) {
             return { valid: false, message: 'Please enter a valid email address' };
         }
     }
-    
-    // Phone validation
-    const phoneInput = document.querySelector('input[type="tel"]');
-    if (phoneInput) {
-        const phoneRegex = /^[\d\s\-\+\(\)]+$/;
-        if (!phoneRegex.test(phoneInput.value)) {
+    if (phoneInput && phoneInput.value.trim()) {
+        if (!/^[\d\s\-\+\(\)]+$/.test(phoneInput.value)) {
             return { valid: false, message: 'Please enter a valid phone number' };
         }
     }
-    
-    // Date validation
-    const checkinDate = document.querySelector('input[type="date"]:nth-of-type(1)');
-    const checkoutDate = document.querySelector('input[type="date"]:nth-of-type(2)');
-    
-    if (checkinDate && checkoutDate) {
-        const checkin = new Date(checkinDate.value);
-        const checkout = new Date(checkoutDate.value);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        
+
+    const checkinInput  = document.querySelector('#checkIn');
+    const checkoutInput = document.querySelector('#checkOut');
+    if (checkinInput && checkoutInput && checkinInput.value && checkoutInput.value) {
+        const checkin  = new Date(checkinInput.value);
+        const checkout = new Date(checkoutInput.value);
+        const today    = new Date(); today.setHours(0, 0, 0, 0);
+
         if (checkin < today) {
             return { valid: false, message: 'Check-in date cannot be in the past' };
         }
-        
         if (checkout <= checkin) {
             return { valid: false, message: 'Check-out date must be after check-in date' };
         }
     }
-    
+
     return { valid: true };
 }
 
-// Tooltip initialization
-function initializeTooltips() {
-    const featureItems = document.querySelectorAll('.feature-item, .room-features span, .dining-info span');
-    
-    featureItems.forEach(item => {
-        item.addEventListener('mouseenter', function() {
-            this.style.cursor = 'help';
-            this.style.position = 'relative';
-        });
-    });
-}
-
-// Utility functions
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-}
-
-// Enhanced API service
-const apiService = {
-    async bookRoom(bookingData) {
-        try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            console.log('Booking data:', bookingData);
-            return { success: true, message: 'Booking successful!' };
-        } catch (error) {
-            return { success: false, message: 'Booking failed. Please try again.' };
-        }
-    },
-    
-    async submitContactForm(formData) {
-        try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            console.log('Contact form data:', formData);
-            return { success: true, message: 'Message sent successfully!' };
-        } catch (error) {
-            return { success: false, message: 'Failed to send message. Please try again.' };
-        }
-    }
-};
-
-// Performance optimization - debounce scroll events
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-// Apply debounce to scroll events
-window.addEventListener('scroll', debounce(function() {
-    // Scroll-based animations can be added here
-}, 16)); // ~60fps
-
-// Utility functions
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-}
-
-// Form validation (placeholder for future contact form)
-function validateForm(formData) {
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
-    if (formData.email && !emailRegex.test(formData.email)) {
-        return { valid: false, message: 'Please enter a valid email address' };
-    }
-    
-    return { valid: true };
-}
-
-
-// Guest Services functionality
-function initializeGuestServices() {
-    const serviceForm = document.getElementById('guestServiceForm');
-    const serviceTypeSelect = document.getElementById('serviceType');
-    const laundryOptions = document.getElementById('laundryOptions');
-    const roomServiceOptions = document.getElementById('roomServiceOptions');
-    
-    // Handle service type change
-    if (serviceTypeSelect) {
-        serviceTypeSelect.addEventListener('change', function() {
-            const selectedService = this.value;
-            
-            // Hide all option sections
-            laundryOptions.style.display = 'none';
-            roomServiceOptions.style.display = 'none';
-            
-            // Show relevant options based on selection
-            if (selectedService === 'laundry') {
-                laundryOptions.style.display = 'block';
-            } else if (selectedService === 'room-service') {
-                roomServiceOptions.style.display = 'block';
-            }
-        });
-    }
-    
-    // Handle form submission
-    if (serviceForm) {
-        serviceForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            const data = Object.fromEntries(formData);
-            
-            // Validate form
-            const validation = validateGuestServiceForm(data);
-            if (!validation.valid) {
-                showNotification(validation.message, 'error');
-                return;
-            }
-            
-            // Collect selected options
-            const selectedOptions = [];
-            const serviceType = data.serviceType;
-            
-            if (serviceType === 'laundry') {
-                const laundryCheckboxes = document.querySelectorAll('input[name="laundryOptions"]:checked');
-                laundryCheckboxes.forEach(checkbox => {
-                    selectedOptions.push(checkbox.value);
-                });
-            } else if (serviceType === 'room-service') {
-                const roomServiceCheckboxes = document.querySelectorAll('input[name="roomServiceOptions"]:checked');
-                roomServiceCheckboxes.forEach(checkbox => {
-                    selectedOptions.push(checkbox.value);
-                });
-            }
-            
-            if (selectedOptions.length === 0) {
-                showNotification('Please select at least one service option', 'error');
-                return;
-            }
-            
-            // Prepare service request data
-            const serviceRequest = {
-                roomNumber: data.roomNumber,
-                serviceType: serviceType,
-                options: selectedOptions,
-                specialRequests: data.specialRequests || '',
-                timestamp: new Date().toISOString()
-            };
-            
-            // Show loading state
-            const submitBtn = this.querySelector('.submit-btn');
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Submitting...';
-            submitBtn.disabled = true;
-            
-            // Simulate API call
-            setTimeout(() => {
-                submitGuestServiceRequest(serviceRequest)
-                    .then(response => {
-                        if (response.success) {
-                            showNotification(response.message, 'success');
-                            showServiceConfirmation(serviceRequest);
-                            this.reset();
-                            
-                            // Hide option sections
-                            laundryOptions.style.display = 'none';
-                            roomServiceOptions.style.display = 'none';
-                        } else {
-                            showNotification(response.message, 'error');
-                        }
-                    })
-                    .catch(error => {
-                        showNotification('Failed to submit request. Please try again.', 'error');
-                    })
-                    .finally(() => {
-                        submitBtn.textContent = originalText;
-                        submitBtn.disabled = false;
-                    });
-            }, 1500);
-        });
-    }
-}
-
-// Validate guest service form
+/**
+ * validateGuestServiceForm
+ * Used by the Guest Services form on the homepage.
+ */
 function validateGuestServiceForm(data) {
-    if (!data.roomNumber || data.roomNumber.trim() === '') {
+    if (!data.roomNumber || !data.roomNumber.trim()) {
         return { valid: false, message: 'Room number is required' };
     }
-    
-    // Validate room number format (should be numeric)
-    const roomNumberRegex = /^\d+$/;
-    if (!roomNumberRegex.test(data.roomNumber.trim())) {
-        return { valid: false, message: 'Please enter a valid room number' };
+    if (!/^\d+$/.test(data.roomNumber.trim())) {
+        return { valid: false, message: 'Please enter a valid room number (digits only)' };
     }
-    
     if (!data.serviceType) {
         return { valid: false, message: 'Please select a service type' };
     }
-    
     return { valid: true };
 }
 
-// Submit guest service request
+
+// ============================================================
+//  Guest Services
+// ============================================================
+function initializeGuestServices() {
+    const serviceForm        = document.getElementById('guestServiceForm');
+    const serviceTypeSelect  = document.getElementById('serviceType');
+    const laundryOptions     = document.getElementById('laundryOptions');
+    const roomServiceOptions = document.getElementById('roomServiceOptions');
+
+    if (serviceTypeSelect && laundryOptions && roomServiceOptions) {
+        serviceTypeSelect.addEventListener('change', function () {
+            laundryOptions.style.display     = this.value === 'laundry'      ? 'block' : 'none';
+            roomServiceOptions.style.display = this.value === 'room-service' ? 'block' : 'none';
+        });
+    }
+
+    if (!serviceForm) return;
+
+    serviceForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const data       = Object.fromEntries(new FormData(this));
+        const validation = validateGuestServiceForm(data);
+        if (!validation.valid) {
+            showNotification(validation.message, 'error');
+            return;
+        }
+
+        const optionKey = data.serviceType === 'laundry' ? 'laundryOptions' : 'roomServiceOptions';
+        const selectedOptions = [
+            ...document.querySelectorAll(`input[name="${optionKey}"]:checked`)
+        ].map(cb => cb.value);
+
+        if (selectedOptions.length === 0) {
+            showNotification('Please select at least one service option', 'error');
+            return;
+        }
+
+        const submitBtn = this.querySelector('.submit-btn');
+        const origText  = submitBtn.textContent;
+        submitBtn.textContent = 'Submitting\u2026';
+        submitBtn.disabled    = true;
+
+        const requestData = {
+            roomNumber:      data.roomNumber,
+            serviceType:     data.serviceType,
+            options:         selectedOptions,
+            specialRequests: data.specialRequests || '',
+            timestamp:       new Date().toISOString()
+        };
+
+        submitGuestServiceRequest(requestData)
+            .then(res => {
+                if (res.success) {
+                    showNotification(res.message, 'success');
+                    showServiceConfirmation(requestData);
+                    this.reset();
+                    if (laundryOptions)     laundryOptions.style.display     = 'none';
+                    if (roomServiceOptions) roomServiceOptions.style.display = 'none';
+                } else {
+                    showNotification(res.message, 'error');
+                }
+            })
+            .catch(() => showNotification('Failed to submit request. Please try again.', 'error'))
+            .finally(() => {
+                submitBtn.textContent = origText;
+                submitBtn.disabled    = false;
+            });
+    });
+}
+
 async function submitGuestServiceRequest(requestData) {
     try {
-        // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1000));
         console.log('Guest service request:', requestData);
-        
-        // Store request in localStorage for demo purposes
-        const existingRequests = JSON.parse(localStorage.getItem('guestServiceRequests') || '[]');
-        existingRequests.push(requestData);
-        localStorage.setItem('guestServiceRequests', JSON.stringify(existingRequests));
-        
-        return { 
-            success: true, 
-            message: `Service request submitted for Room ${requestData.roomNumber}! We'll process it shortly.` 
+
+        const existing = JSON.parse(localStorage.getItem('guestServiceRequests') || '[]');
+        existing.push(requestData);
+        localStorage.setItem('guestServiceRequests', JSON.stringify(existing));
+
+        return {
+            success: true,
+            message: `Service request submitted for Room ${requestData.roomNumber}! We'll process it shortly.`
         };
-    } catch (error) {
+    } catch {
         return { success: false, message: 'Failed to submit request. Please try again.' };
     }
 }
 
-// Show service confirmation
-function showServiceConfirmation(requestData) {
+function showServiceConfirmation() {
     const confirmation = document.getElementById('serviceConfirmation');
-    if (confirmation) {
-        confirmation.style.display = 'block';
-        
-        // Scroll to confirmation
-        confirmation.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        
-        // Hide confirmation after 5 seconds
-        setTimeout(() => {
-            confirmation.style.display = 'none';
-        }, 5000);
-    }
+    if (!confirmation) return;
+    confirmation.style.display = 'block';
+    confirmation.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => { confirmation.style.display = 'none'; }, 5000);
 }
 
-// Load rooms dynamically from API
+
+// ============================================================
+//  Rooms page — dynamic card loader
+// ============================================================
 async function loadRooms() {
+    const roomsGrid = document.querySelector('.rooms-grid');
+    if (!roomsGrid) return;
+
+    roomsGrid.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading rooms\u2026</p></div>';
+
     try {
-        const roomsGrid = document.querySelector('.rooms-grid');
-        if (!roomsGrid) return;
-
-        // Show loading state
-        roomsGrid.innerHTML = '<div class="loading">Loading rooms...</div>';
-
         const response = await fetch('/api/rooms/types');
-        if (!response.ok) {
-            throw new Error('Failed to fetch room types');
-        }
+        if (!response.ok) throw new Error('Network response was not ok');
 
         const roomTypes = await response.json();
-        
-        // Clear existing content
         roomsGrid.innerHTML = '';
+        roomTypes.forEach((room, i) => roomsGrid.appendChild(createRoomCard(room, i)));
 
-        // Loop through room types and create room cards
-        roomTypes.forEach((room, index) => {
-            const roomCard = createRoomCard(room, index);
-            roomsGrid.appendChild(roomCard);
+        // Observe newly injected cards for scroll-reveal
+        const cardObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    cardObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        roomsGrid.querySelectorAll('.room-card').forEach(card => {
+            card.classList.add('scroll-reveal');
+            cardObserver.observe(card);
         });
-
-        // Reinitialize scroll animations for new elements
-        initializeScrollAnimations();
 
     } catch (error) {
         console.error('Error loading rooms:', error);
-        const roomsGrid = document.querySelector('.rooms-grid');
-        if (roomsGrid) {
-            roomsGrid.innerHTML = '<div class="error">Failed to load rooms. Please try again later.</div>';
-        }
+        roomsGrid.innerHTML = '<div class="error-message">Failed to load rooms. Please try again later.</div>';
     }
 }
 
-// Create room card element
+/**
+ * createRoomCard
+ * Fixed: isPremium now correctly references the array length via a separate
+ * parameter instead of the single room object (the original bug).
+ */
 function createRoomCard(room, index) {
-    const roomCard = document.createElement('div');
-    
-    // Add premium class for first room (most expensive)
-    const isPremium = index === room.length - 1;
-    const premiumClass = isPremium ? ' premium' : '';
-    
-    // Parse amenities from JSON
     const amenities = Array.isArray(room.amenities) ? room.amenities : [];
-    
-    roomCard.className = `room-card${premiumClass}`;
-    roomCard.innerHTML = `
+    const isPremium = index === 0; // First item is the featured/premium room
+
+    const card = document.createElement('div');
+    card.className = `room-card${isPremium ? ' premium' : ''}`;
+    card.innerHTML = `
         <div class="room-image">
             ${isPremium ? '<div class="room-badge">Premium</div>' : ''}
-            <img src="${room.image_url}" alt="${room.name}" class="room-img">
+            <img src="${room.image_url}" alt="${room.name}" class="room-img" loading="lazy">
         </div>
         <div class="room-content">
             <h3>${room.name}</h3>
             <p>${room.description}</p>
             <div class="room-features">
-                ${amenities.slice(0, 3).map(amenity => `<span>${amenity}</span>`).join('')}
+                ${amenities.slice(0, 3).map(a => `<span>${a}</span>`).join('')}
             </div>
             <div class="room-price">
-                <span class="price">$${room.price_per_night}</span>
+                <span class="price">\u20A6${Number(room.price_per_night).toLocaleString()}</span>
                 <span class="price-unit">per night</span>
             </div>
             <div class="room-card-action">
@@ -594,29 +441,31 @@ function createRoomCard(room, index) {
             </div>
         </div>
     `;
-    
-    return roomCard;
+    return card;
 }
 
-// Initialize scroll animations for dynamically loaded content
-function initializeScrollAnimations() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
 
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-            }
-        });
-    }, observerOptions);
+// ============================================================
+//  Shared API service (available to booking.js and other modules)
+// ============================================================
+const apiService = {
+    async bookRoom(bookingData) {
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            console.log('Booking data:', bookingData);
+            return { success: true, message: 'Booking successful!' };
+        } catch {
+            return { success: false, message: 'Booking failed. Please try again.' };
+        }
+    },
 
-    // Observe new room cards for scroll animations
-    const roomCards = document.querySelectorAll('.room-card:not(.scroll-reveal)');
-    roomCards.forEach(card => {
-        card.classList.add('scroll-reveal');
-        observer.observe(card);
-    });
-}
+    async submitContactForm(formData) {
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            console.log('Contact form data:', formData);
+            return { success: true, message: 'Message sent successfully!' };
+        } catch {
+            return { success: false, message: 'Failed to send message. Please try again.' };
+        }
+    }
+};

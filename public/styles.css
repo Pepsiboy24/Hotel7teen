@@ -2824,6 +2824,148 @@ html {
     background: var(--primary-charcoal);
 }
 
+/* ============================================================
+   About Teaser & Dining Teaser Section Wrappers
+   ============================================================ */
+.about-teaser-section,
+.dining-teaser-section,
+.gallery-teaser-section {
+    padding: 8rem 0;
+    background: var(--soft-bone);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================================
+   Featured Section — Overlay Cards
+   ============================================================ */
+.featured-section {
+    padding: 8rem 0;
+    background: var(--primary-charcoal);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.featured-section .section-header h2 {
+    color: var(--pure-white);
+}
+
+.featured-section .section-header p {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.featured-section .section-header {
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.featured-section .section-header h2::after {
+    background: var(--hotel7teen-burgundy);
+}
+
+.featured-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+}
+
+.featured-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.featured-image {
+    position: relative;
+    height: 480px;
+    overflow: hidden;
+}
+
+.featured-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+    display: block;
+}
+
+.featured-item:hover .featured-img {
+    transform: scale(1.07);
+}
+
+.featured-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2.5rem 2rem 2rem;
+    background: linear-gradient(
+        to top,
+        rgba(26, 26, 27, 0.92) 0%,
+        rgba(26, 26, 27, 0.4) 60%,
+        transparent 100%
+    );
+    transform: translateY(0);
+    transition: background 0.4s ease;
+}
+
+.featured-overlay h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--pure-white);
+    margin-bottom: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+}
+
+.featured-overlay p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 1.2rem;
+    line-height: 1.5;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.learn-more-btn {
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--pure-white);
+    text-decoration: none;
+    border-bottom: 1px solid var(--hotel7teen-burgundy);
+    padding-bottom: 2px;
+    transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.learn-more-btn:hover {
+    color: var(--hotel7teen-burgundy);
+}
+
+/* Mobile Featured Grid */
+@media (max-width: 768px) {
+    .featured-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .featured-image {
+        height: 320px;
+    }
+
+    .featured-overlay h3 {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .featured-image {
+        height: 260px;
+    }
+}
+
 /* Teaser Card Styles */
 .teaser-grid {
     display: grid;
@@ -3295,6 +3437,160 @@ html {
     margin-bottom: 1rem;
     font-family: 'Montserrat', sans-serif;
     font-size: 0.9rem;
+}
+
+/* ============================================================
+   Booking Page — Room Cards Grid (Step 2)
+   ============================================================ */
+
+.room-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Override transparent background from rooms page — booking cards need clear borders */
+.room-cards .room-card {
+    background: var(--pure-white);
+    border: 2px solid var(--subtle-gray);
+    cursor: pointer;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.room-cards .room-card:hover {
+    border-color: var(--hotel7teen-burgundy);
+    box-shadow: 0 6px 24px rgba(128, 0, 0, 0.12);
+    transform: translateY(-4px);
+}
+
+.room-cards .room-card.selected {
+    border-color: var(--hotel7teen-burgundy);
+    background: rgba(128, 0, 0, 0.03);
+    box-shadow: 0 6px 24px rgba(128, 0, 0, 0.15);
+}
+
+/* Selected indicator badge */
+.room-cards .room-card.selected::after {
+    content: '✓ Selected';
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--hotel7teen-burgundy);
+    color: var(--pure-white);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 0.8rem;
+    z-index: 5;
+}
+
+.room-cards .room-image {
+    height: 220px;
+}
+
+.room-cards .room-content {
+    padding: 1.25rem 1.5rem 1.5rem;
+    text-align: left;
+}
+
+.room-cards .room-content h3 {
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.4rem;
+}
+
+.room-cards .room-content p {
+    font-size: 0.82rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.room-cards .room-features {
+    justify-content: flex-start;
+    margin-bottom: 1rem;
+}
+
+.room-cards .room-price {
+    justify-content: flex-start;
+    margin-bottom: 1rem;
+}
+
+.room-cards .price {
+    font-size: 1.5rem;
+}
+
+/* Hide the "Book Now" action button inside booking flow cards — selection is via click */
+.room-cards .room-card-action {
+    display: none;
+}
+
+/* ============================================================
+   Booking Page — Summary Box (Step 3)
+   ============================================================ */
+
+.booking-summary {
+    background: var(--soft-bone);
+    border-left: 3px solid var(--hotel7teen-burgundy);
+    padding: 1.5rem 2rem;
+    margin-bottom: 2.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem 2rem;
+}
+
+.booking-summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.booking-summary-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-lighter);
+}
+
+.booking-summary-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary-charcoal);
+    letter-spacing: 0.05em;
+}
+
+.booking-summary-value.price {
+    color: var(--hotel7teen-burgundy);
+    font-size: 1.2rem;
+}
+
+/* Responsive room cards */
+@media (max-width: 768px) {
+    .room-cards {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+
+    .room-cards .room-image {
+        height: 200px;
+    }
+
+    .booking-summary {
+        grid-template-columns: 1fr 1fr;
+        padding: 1.25rem 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .booking-summary {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 768px) {
