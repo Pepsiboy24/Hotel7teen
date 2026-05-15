@@ -1,12 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createClient } = require('@supabase/supabase-js');
-
-// Initialize Supabase client
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
+const { supabase } = require('../config/database');
 
 /**
  * Staff login endpoint
@@ -241,22 +235,21 @@ router.post('/register', async (req, res) => {
 
     // Create staff record
     const { data: staffData, error: staffError } = await supabase
-      .from('staff')
-      .insert({
-        email,
-        first_name,
-        last_name,
-        position,
-        is_active: true,
-        hire_date: new Date().toISOString(),
-        auth_user_id: authData.user.id
-      })
+  .from('staff')
+  .insert([{
+    auth_user_id: authData.user.id,
+    first_name,
+    last_name,
+    email,
+    position: 'Front Desk', // Or whatever default you want
+    hire_date: new Date().toISOString().split('T')[0] // Adds current date (YYYY-MM-DD)
+  }])
       .select()
       .single();
 
     if (staffError) {
       // Rollback: delete the auth user if staff creation fails
-      await supabase.auth.admin.deleteUser(authData.user.id);
+      // await supabase.auth.admin.deleteUser(authData.user.id);
       return res.status(500).json({
         error: 'Staff creation failed',
         message: 'Failed to create staff record'

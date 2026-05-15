@@ -4,911 +4,1283 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hotel7teen Admin Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        .auth-container {
-            max-width: 500px;
-            margin: 120px auto;
-            padding: 3rem;
-            background: var(--pure-white);
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(128, 0, 0, 0.1);
+        /* ── Design Tokens (mirrors styles.css) ──────────────────────── */
+        :root {
+            --primary-charcoal:   #1A1A1B;
+            --soft-bone:          #F9F7F2;
+            --burgundy:           #800000;
+            --dark-burgundy:      #5c0000;
+            --text-light:         #666666;
+            --text-lighter:       #999999;
+            --pure-white:         #FFFFFF;
+            --subtle-gray:        #E8E6E0;
+            --sidebar-width:      260px;
         }
-        
-        .auth-form {
+
+        /* ── Reset ───────────────────────────────────────────────────── */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--soft-bone);
+            color: var(--primary-charcoal);
+            min-height: 100vh;
+        }
+
+        /* ════════════════════════════════════════════════════════════════
+           LOGIN SCREEN
+        ════════════════════════════════════════════════════════════════ */
+        #loginScreen {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Left panel — atmospheric image */
+        .login-panel-image {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            display: none; /* hidden on mobile, shown on md+ */
+        }
+
+        .login-panel-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .login-panel-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                160deg,
+                rgba(26,26,27,0.72) 0%,
+                rgba(128,0,0,0.45) 100%
+            );
+        }
+
+        .login-panel-brand {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            justify-content: flex-end;
+            padding: 3.5rem;
         }
-        
+
+        .login-panel-brand .brand-eyebrow {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 0.75rem;
+        }
+
+        .login-panel-brand h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--pure-white);
+            line-height: 1.05;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .login-panel-brand h1 span {
+            color: rgba(255,255,255,0.4);
+        }
+
+        .login-panel-brand .brand-tagline {
+            margin-top: 1.25rem;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.55);
+            font-weight: 300;
+            letter-spacing: 0.05em;
+            max-width: 28ch;
+            line-height: 1.7;
+        }
+
+        .login-panel-brand .brand-divider {
+            width: 40px;
+            height: 2px;
+            background: var(--burgundy);
+            margin-top: 2rem;
+        }
+
+        /* Right panel — login form */
+        .login-panel-form {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3rem 3.5rem;
+            background: var(--pure-white);
+        }
+
+        .login-logo-mobile {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: var(--burgundy);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 2.5rem;
+        }
+
+        .login-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-charcoal);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subheading {
+            font-size: 0.85rem;
+            color: var(--text-lighter);
+            letter-spacing: 0.03em;
+            margin-bottom: 2.5rem;
+        }
+
+        /* Form elements */
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.4rem;
+            margin-bottom: 1.25rem;
         }
-        
+
         .form-group label {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 500;
-            color: var(--primary-charcoal);
-            font-size: 0.9rem;
+            font-size: 0.72rem;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.12em;
+            color: var(--text-light);
         }
-        
+
         .form-group input {
-            padding: 1rem;
-            border: 2px solid rgba(128, 0, 0, 0.1);
-            border-radius: 8px;
+            padding: 0.85rem 1rem;
+            border: 1.5px solid var(--subtle-gray);
+            border-radius: 6px;
             font-family: 'Montserrat', sans-serif;
-            font-size: 1rem;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-size: 0.95rem;
+            color: var(--primary-charcoal);
             background: var(--soft-bone);
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
         }
-        
+
         .form-group input:focus {
             outline: none;
-            border-color: var(--primary-burgundy);
-            box-shadow: 0 0 0 3px rgba(128, 0, 0, 0.1);
+            border-color: var(--burgundy);
+            box-shadow: 0 0 0 3px rgba(128,0,0,0.08);
+            background: var(--pure-white);
         }
-        
+
         .btn {
-            padding: 1rem 2rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.9rem 2rem;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             font-family: 'Montserrat', sans-serif;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.78rem;
+            letter-spacing: 0.14em;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
         }
-        
+
         .btn-primary {
-            background: var(--primary-burgundy);
+            background: var(--burgundy);
             color: var(--pure-white);
-            box-shadow: 0 4px 6px rgba(128, 0, 0, 0.2);
+            width: 100%;
+            box-shadow: 0 4px 14px rgba(128,0,0,0.25);
         }
-        
-        .btn-primary:hover {
+
+        .btn-primary:hover:not(:disabled) {
             background: var(--dark-burgundy);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 12px rgba(128, 0, 0, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(128,0,0,0.35);
         }
-        
-        .btn-secondary {
-            background: var(--text-light);
-            color: var(--pure-white);
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
-        
-        .btn-secondary:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-light);
+            border: 1.5px solid var(--subtle-gray);
+            font-size: 0.75rem;
         }
-        
-        .dashboard {
-            display: none;
-            padding: 3rem 0;
-            background: var(--soft-bone);
+
+        .btn-ghost:hover {
+            border-color: var(--burgundy);
+            color: var(--burgundy);
+        }
+
+        .btn-sm {
+            padding: 0.55rem 1rem;
+            font-size: 0.7rem;
+        }
+
+        /* Messages */
+        .message-container { margin-bottom: 1.25rem; min-height: 0; }
+
+        .message {
+            padding: 0.85rem 1.1rem;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .message::before { font-size: 1rem; }
+
+        .message-error {
+            background: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+        }
+
+        .message-error::before { content: '✕'; }
+
+        .message-success {
+            background: #f0fdf4;
+            color: #15803d;
+            border: 1px solid #bbf7d0;
+        }
+
+        .message-success::before { content: '✓'; }
+
+        /* Login footer link */
+        .login-footer {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--subtle-gray);
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-lighter);
+        }
+
+        .login-footer a {
+            color: var(--burgundy);
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .login-footer a:hover { color: var(--dark-burgundy); }
+
+        @media (min-width: 900px) {
+            .login-panel-image { display: block; }
+            .login-logo-mobile { display: none; }
+            .login-panel-form { padding: 4rem; }
+        }
+
+        /* ════════════════════════════════════════════════════════════════
+           DASHBOARD LAYOUT
+        ════════════════════════════════════════════════════════════════ */
+        #dashboard { display: none; }
+
+        .dashboard-layout {
+            display: flex;
             min-height: 100vh;
         }
-        
-        .dashboard-header {
+
+        /* ── Sidebar ─────────────────────────────────────────────────── */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--primary-charcoal);
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 3rem;
-            padding-bottom: 2rem;
-            border-bottom: 2px solid rgba(128, 0, 0, 0.1);
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 100;
+            overflow-y: auto;
         }
-        
-        .dashboard-header h1 {
+
+        .sidebar-brand {
+            padding: 2rem 1.75rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+
+        .sidebar-brand .eyebrow {
+            font-size: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--burgundy);
+            margin-bottom: 0.35rem;
+        }
+
+        .sidebar-brand h2 {
             font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary-charcoal);
-            text-transform: none;
-            letter-spacing: normal;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: var(--pure-white);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            line-height: 1.1;
         }
-        
-        .user-info {
+
+        .sidebar-brand h2 span { color: rgba(255,255,255,0.35); }
+
+        .sidebar-nav {
+            padding: 1.5rem 0;
+            flex: 1;
+        }
+
+        .sidebar-nav-label {
+            padding: 0.5rem 1.75rem;
+            font-size: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.3);
+            margin-bottom: 0.25rem;
+        }
+
+        .sidebar-nav a {
             display: flex;
             align-items: center;
-            gap: 1rem;
-        }
-        
-        .error-message {
-            color: var(--pure-white);
-            background: linear-gradient(135deg, #dc3545, #c82333);
-            border: 1px solid #f5c6cb;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            font-family: 'Montserrat', sans-serif;
+            gap: 0.8rem;
+            padding: 0.75rem 1.75rem;
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            font-size: 0.82rem;
             font-weight: 500;
+            letter-spacing: 0.04em;
+            transition: all 0.2s ease;
+            border-left: 2px solid transparent;
         }
-        
-        .success-message {
+
+        .sidebar-nav a:hover {
             color: var(--pure-white);
-            background: linear-gradient(135deg, #28a745, #20c997);
-            border: 1px solid #c3e6cb;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 500;
+            background: rgba(255,255,255,0.05);
+            border-left-color: var(--burgundy);
         }
-        
-        .dashboard-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+
+        .sidebar-nav a.active {
+            color: var(--pure-white);
+            background: rgba(128,0,0,0.18);
+            border-left-color: var(--burgundy);
         }
-        
-        .dashboard-card {
+
+        .sidebar-nav a .nav-icon { font-size: 1rem; opacity: 0.8; }
+
+        .sidebar-footer {
+            padding: 1.5rem 1.75rem;
+            border-top: 1px solid rgba(255,255,255,0.07);
+        }
+
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .user-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--burgundy);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--pure-white);
+            letter-spacing: 0.05em;
+            flex-shrink: 0;
+        }
+
+        .user-meta { overflow: hidden; }
+
+        .user-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--pure-white);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-role {
+            font-size: 0.67rem;
+            color: rgba(255,255,255,0.4);
+            letter-spacing: 0.06em;
+        }
+
+        /* ── Main content ────────────────────────────────────────────── */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .topbar {
             background: var(--pure-white);
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(128, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            padding: 1.25rem 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--subtle-gray);
+            position: sticky;
+            top: 0;
+            z-index: 50;
         }
-        
-        .dashboard-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
-        }
-        
-        .dashboard-card h3 {
+
+        .topbar-title {
             font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
+            font-size: 1.35rem;
             font-weight: 700;
             color: var(--primary-charcoal);
-            margin-bottom: 1.5rem;
-            text-transform: none;
-            letter-spacing: normal;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
-        
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #16a34a;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.4; }
+        }
+
+        .topbar-live {
+            font-size: 0.72rem;
+            color: var(--text-lighter);
+            letter-spacing: 0.06em;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .page-body {
+            padding: 2.5rem;
+            flex: 1;
+        }
+
+        /* ── Stat cards ──────────────────────────────────────────────── */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
+            gap: 1.25rem;
+            margin-bottom: 2.5rem;
         }
-        
+
         .stat-card {
-            background: linear-gradient(135deg, var(--pure-white), var(--soft-bone));
-            padding: 2rem;
-            border-radius: 12px;
-            text-align: center;
-            border: 1px solid rgba(128, 0, 0, 0.1);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: var(--pure-white);
+            padding: 1.75rem;
+            border-radius: 10px;
+            border: 1px solid var(--subtle-gray);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
-        
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--burgundy);
+        }
+
         .stat-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
         }
-        
+
+        .stat-icon {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+
         .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary-burgundy);
             font-family: 'Playfair Display', serif;
-            margin-bottom: 0.5rem;
+            font-size: 2.6rem;
+            font-weight: 700;
+            color: var(--primary-charcoal);
+            line-height: 1;
+            margin-bottom: 0.4rem;
         }
-        
+
         .stat-label {
-            color: var(--text-light);
-            margin-top: 0.5rem;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 500;
+            font-size: 0.68rem;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-size: 0.8rem;
+            letter-spacing: 0.14em;
+            color: var(--text-lighter);
         }
 
-        /* Room Grid Styles */
-        .room-controls {
+        /* ── Dashboard content grid ──────────────────────────────────── */
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        .panel {
+            background: var(--pure-white);
+            border-radius: 10px;
+            border: 1px solid var(--subtle-gray);
+            overflow: hidden;
+        }
+
+        .panel-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-            gap: 1rem;
+            justify-content: space-between;
+            padding: 1.25rem 1.75rem;
+            border-bottom: 1px solid var(--subtle-gray);
         }
 
-        .filter-buttons {
+        .panel-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--primary-charcoal);
+        }
+
+        .panel-body { padding: 1.5rem 1.75rem; }
+
+        /* ── Filter buttons ──────────────────────────────────────────── */
+        .filter-group {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.4rem;
             flex-wrap: wrap;
         }
 
         .filter-btn {
-            padding: 0.5rem 1rem;
-            border: 1px solid #ddd;
-            background: white;
+            padding: 0.38rem 0.85rem;
+            border: 1.5px solid var(--subtle-gray);
             border-radius: 4px;
+            background: transparent;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-light);
             cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.875rem;
+            transition: all 0.2s ease;
         }
 
         .filter-btn:hover {
-            background: #f8f9fa;
-        }
-
-        .filter-btn:hover {
-            background: var(--soft-bone);
+            border-color: var(--burgundy);
+            color: var(--burgundy);
         }
 
         .filter-btn.active {
-            background: var(--primary-burgundy);
+            background: var(--burgundy);
+            border-color: var(--burgundy);
             color: var(--pure-white);
-            border-color: var(--primary-burgundy);
         }
 
+        /* ── Room grid ───────────────────────────────────────────────── */
         .rooms-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 0.9rem;
+            margin-top: 1.25rem;
         }
 
         .room-card {
             background: var(--pure-white);
-            border: 2px solid rgba(128, 0, 0, 0.1);
+            border: 1.5px solid var(--subtle-gray);
             border-radius: 8px;
             padding: 1rem;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.22s ease;
             position: relative;
             overflow: hidden;
         }
 
         .room-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.1);
         }
 
-        .room-card.available {
-            border-color: #28a745;
-            background: linear-gradient(135deg, #f8fff9 0%, #e8f5e8 100%);
+        /* Status accent strip at top */
+        .room-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
         }
 
-        .room-card.occupied {
-            border-color: #dc3545;
-            background: linear-gradient(135deg, #fff8f8 0%, #ffe8e8 100%);
-        }
+        .room-card.available  { border-color: #bbf7d0; }
+        .room-card.available::before  { background: #16a34a; }
 
-        .room-card.maintenance {
-            border-color: #ffc107;
-            background: linear-gradient(135deg, #fffef8 0%, #fff8e8 100%);
-        }
+        .room-card.occupied   { border-color: #fecaca; }
+        .room-card.occupied::before   { background: #dc2626; }
 
-        .room-card.reserved {
-            border-color: #17a2b8;
-            background: linear-gradient(135deg, #f8ffff 0%, #e8f8f8 100%);
-        }
+        .room-card.maintenance { border-color: #fde68a; }
+        .room-card.maintenance::before { background: #d97706; }
 
-        .room-card.dirty {
-            border-color: #6c757d;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e8e9ea 100%);
+        .room-card.reserved   { border-color: #bae6fd; }
+        .room-card.reserved::before   { background: #0284c7; }
+
+        .room-card.dirty      { border-color: #e5e7eb; }
+        .room-card.dirty::before      { background: #9ca3af; }
+
+        .room-floor-badge {
+            position: absolute;
+            top: 0.6rem;
+            right: 0.6rem;
+            background: rgba(26,26,27,0.06);
+            color: var(--text-lighter);
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            padding: 0.18rem 0.45rem;
+            border-radius: 3px;
         }
 
         .room-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.75rem;
+            justify-content: space-between;
+            margin-top: 0.75rem;
+            margin-bottom: 0.6rem;
         }
 
         .room-number {
-            font-size: 1.25rem;
-            font-weight: bold;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
             color: var(--primary-charcoal);
-            font-family: 'Montserrat', sans-serif;
         }
 
-        .room-status {
-            padding: 0.25rem 0.5rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
+        .room-status-badge {
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
+            padding: 0.22rem 0.55rem;
+            border-radius: 20px;
             color: var(--pure-white);
-            font-family: 'Montserrat', sans-serif;
         }
 
-        .room-status.available {
-            background: #28a745;
-        }
-
-        .room-status.occupied {
-            background: #dc3545;
-        }
-
-        .room-status.maintenance {
-            background: #ffc107;
-            color: var(--primary-charcoal);
-        }
-
-        .room-status.reserved {
-            background: #17a2b8;
-        }
-
-        .room-status.dirty {
-            background: #6c757d;
-        }
+        .room-status-badge.available  { background: #16a34a; }
+        .room-status-badge.occupied   { background: #dc2626; }
+        .room-status-badge.maintenance { background: #d97706; }
+        .room-status-badge.reserved   { background: #0284c7; }
+        .room-status-badge.dirty      { background: #9ca3af; }
 
         .room-details {
-            font-size: 0.875rem;
+            font-size: 0.75rem;
             color: var(--text-light);
-            line-height: 1.4;
-            font-family: 'Montserrat', sans-serif;
+            line-height: 1.5;
         }
 
-        .room-type {
+        .room-type-label {
             font-weight: 600;
             color: var(--primary-charcoal);
-            margin-bottom: 0.25rem;
+            font-size: 0.78rem;
+            margin-bottom: 0.2rem;
         }
 
-        .room-price {
-            color: var(--primary-burgundy);
+        .room-price-label {
+            color: var(--burgundy);
             font-weight: 600;
         }
 
-        .room-guest {
-            margin-top: 0.5rem;
-            padding-top: 0.5rem;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-            font-size: 0.8rem;
-            color: var(--text-light);
+        .room-guest-info {
+            margin-top: 0.6rem;
+            padding-top: 0.6rem;
+            border-top: 1px solid var(--subtle-gray);
+            font-size: 0.72rem;
+            color: var(--text-lighter);
+            line-height: 1.4;
         }
 
-        .room-floor {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            background: rgba(128, 0, 0, 0.1);
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--pure-white);
-        }
-
-        .room-card.available {
-            border-color: #28a745;
-            background: linear-gradient(135deg, #f8fff9 0%, #e8f5e8 100%);
-        }
-
-        .room-card.occupied {
-            border-color: #dc3545;
-            background: linear-gradient(135deg, #fff8f8 0%, #ffe8e8 100%);
-        }
-
-        .room-card.maintenance {
-            border-color: #ffc107;
-            background: linear-gradient(135deg, #fffef8 0%, #fff8e8 100%);
-        }
-
-        .room-card.reserved {
-            border-color: #17a2b8;
-            background: linear-gradient(135deg, #f8ffff 0%, #e8f8f8 100%);
-        }
-
-        .room-card.dirty {
-            border-color: #6c757d;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e8e9ea 100%);
-        }
-
-        .room-header {
+        /* ── Arrivals panel ──────────────────────────────────────────── */
+        .arrival-item {
             display: flex;
-            justify-content: space-between;
+            align-items: flex-start;
+            gap: 0.85rem;
+            padding: 0.85rem 0;
+            border-bottom: 1px solid var(--subtle-gray);
+        }
+
+        .arrival-item:last-child { border-bottom: none; }
+
+        .arrival-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--burgundy), var(--dark-burgundy));
+            display: flex;
             align-items: center;
-            margin-bottom: 0.75rem;
+            justify-content: center;
+            color: var(--pure-white);
+            font-size: 0.65rem;
+            font-weight: 700;
+            flex-shrink: 0;
         }
 
-        .room-number {
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: #333;
-        }
+        .arrival-body { flex: 1; min-width: 0; }
 
-        .room-status {
-            padding: 0.25rem 0.5rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
+        .arrival-name {
+            font-size: 0.82rem;
             font-weight: 600;
-            text-transform: uppercase;
-            color: white;
+            color: var(--primary-charcoal);
+            margin-bottom: 0.2rem;
         }
 
-        .room-status.available {
-            background: #28a745;
-        }
-
-        .room-status.occupied {
-            background: #dc3545;
-        }
-
-        .room-status.maintenance {
-            background: #ffc107;
-            color: #333;
-        }
-
-        .room-status.reserved {
-            background: #17a2b8;
-        }
-
-        .room-status.dirty {
-            background: #6c757d;
-        }
-
-        .room-details {
-            font-size: 0.875rem;
-            color: #666;
+        .arrival-meta {
+            font-size: 0.72rem;
+            color: var(--text-lighter);
             line-height: 1.4;
         }
 
-        .room-type {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 0.25rem;
+        .arrival-room-badge {
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 0.18rem 0.5rem;
+            border-radius: 3px;
+            background: rgba(128,0,0,0.08);
+            color: var(--burgundy);
         }
 
-        .room-price {
-            color: #007bff;
-            font-weight: 600;
+        .empty-state {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            color: var(--text-lighter);
         }
 
-        .room-guest {
-            margin-top: 0.5rem;
-            padding-top: 0.5rem;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-            font-size: 0.8rem;
-            color: #666;
+        .empty-state-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+
+        .empty-state p {
+            font-size: 0.82rem;
+            letter-spacing: 0.03em;
         }
 
-        .room-floor {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            background: rgba(0, 0, 0, 0.1);
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
+        /* ── Responsive ──────────────────────────────────────────────── */
+        @media (max-width: 1100px) {
+            .dashboard-content { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 768px) {
-            .rooms-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            }
-            
-            .room-controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .filter-buttons {
-                justify-content: center;
-            }
+            .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .page-body { padding: 1.5rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
 <body>
-    <!-- Login Form -->
-    <div id="loginContainer" class="auth-container">
-        <h2>Admin Login</h2>
-        <div id="messageContainer"></div>
-        <form id="loginForm" class="auth-form">
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
+
+    <!-- ══════════════ LOGIN SCREEN ══════════════ -->
+    <div id="loginScreen">
+
+        <!-- Left: atmospheric image panel -->
+        <div class="login-panel-image">
+            <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80"
+                 alt="Hotel7teen Luxury Lobby">
+            <div class="login-panel-brand">
+                <div class="brand-eyebrow">Kaduna · Est. 2010</div>
+                <h1>Hotel<span>7</span>teen</h1>
+                <p class="brand-tagline">Where every moment is crafted to exceed your expectations.</p>
+                <div class="brand-divider"></div>
             </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
+        </div>
+
+        <!-- Right: form panel -->
+        <div class="login-panel-form">
+            <div class="login-logo-mobile">Hotel7teen</div>
+
+            <p class="login-heading">Admin Portal</p>
+            <p class="login-subheading">Sign in to manage your property</p>
+
+            <div class="message-container" id="loginMessageContainer"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" autocomplete="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" autocomplete="current-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" id="loginBtn">Sign In</button>
+            </form>
+
+            <div class="login-footer">
+                Need a new account? <a href="signup.html">Register Admin</a>
             </div>
-            <button type="submit" class="btn btn-primary">Login</button>
-        </form>
+        </div>
+
     </div>
 
-    <!-- Dashboard -->
-    <div id="dashboard" class="dashboard">
-        <div class="dashboard-header">
-            <h1>Hotel7teen Admin Dashboard</h1>
-            <div class="user-info">
-                <span id="userDisplay"></span>
-                <button id="logoutBtn" class="btn btn-secondary">Logout</button>
-            </div>
-        </div>
+    <!-- ══════════════ DASHBOARD ══════════════ -->
+    <div id="dashboard">
+        <div class="dashboard-layout">
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number" id="totalRooms">-</div>
-                <div class="stat-label">Total Rooms</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="availableRooms">-</div>
-                <div class="stat-label">Available Rooms</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="todayArrivals">-</div>
-                <div class="stat-label">Today's Arrivals</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="occupiedRooms">-</div>
-                <div class="stat-label">Occupied Rooms</div>
-            </div>
-        </div>
+            <!-- Sidebar -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-brand">
+                    <div class="eyebrow">Admin Portal</div>
+                    <h2>Hotel<span>7</span>teen</h2>
+                </div>
 
-        <div class="dashboard-content">
-            <div class="dashboard-card">
-                <h3>Room Status Grid</h3>
-                <div class="room-controls">
-                    <button id="refreshRooms" class="btn btn-primary">Refresh Status</button>
-                    <div class="filter-buttons">
-                        <button class="filter-btn active" data-filter="all">All Rooms</button>
-                        <button class="filter-btn" data-filter="available">Available</button>
-                        <button class="filter-btn" data-filter="occupied">Occupied</button>
-                        <button class="filter-btn" data-filter="maintenance">Maintenance</button>
+                <nav class="sidebar-nav">
+                    <div class="sidebar-nav-label">Overview</div>
+                    <a href="#" class="active">
+                        <span class="nav-icon">▦</span> Dashboard
+                    </a>
+                    <div class="sidebar-nav-label" style="margin-top:1rem">Management</div>
+                    <a href="#">
+                        <span class="nav-icon">🛏</span> Rooms
+                    </a>
+                    <a href="#">
+                        <span class="nav-icon">📋</span> Bookings
+                    </a>
+                    <a href="#">
+                        <span class="nav-icon">👤</span> Guests
+                    </a>
+                    <div class="sidebar-nav-label" style="margin-top:1rem">Reports</div>
+                    <a href="#">
+                        <span class="nav-icon">📊</span> Analytics
+                    </a>
+                    <a href="#">
+                        <span class="nav-icon">📅</span> Arrivals
+                    </a>
+                </nav>
+
+                <div class="sidebar-footer">
+                    <div class="sidebar-user">
+                        <div class="user-avatar" id="userAvatar">–</div>
+                        <div class="user-meta">
+                            <div class="user-name" id="userName">–</div>
+                            <div class="user-role" id="userRole">–</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-ghost btn-sm" id="logoutBtn" style="width:100%">Sign Out</button>
+                </div>
+            </aside>
+
+            <!-- Main content -->
+            <div class="main-content">
+
+                <header class="topbar">
+                    <div class="topbar-title">Dashboard</div>
+                    <div class="topbar-actions">
+                        <span class="topbar-live"><span class="status-dot"></span>Live</span>
+                        <div class="message-container" id="dashMessageContainer" style="margin:0; min-width:220px"></div>
+                    </div>
+                </header>
+
+                <div class="page-body">
+
+                    <!-- Stat cards -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">🏨</div>
+                            <div class="stat-number" id="totalRooms">–</div>
+                            <div class="stat-label">Total Rooms</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">✅</div>
+                            <div class="stat-number" id="availableRooms">–</div>
+                            <div class="stat-label">Available</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🔑</div>
+                            <div class="stat-number" id="occupiedRooms">–</div>
+                            <div class="stat-label">Occupied</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🧳</div>
+                            <div class="stat-number" id="todayArrivals">–</div>
+                            <div class="stat-label">Today's Arrivals</div>
+                        </div>
+                    </div>
+
+                    <!-- Main panels -->
+                    <div class="dashboard-content">
+
+                        <!-- Room Status Grid -->
+                        <div class="panel">
+                            <div class="panel-header">
+                                <span class="panel-title">Room Status</span>
+                                <div style="display:flex; gap:0.6rem; align-items:center">
+                                    <div class="filter-group" id="filterGroup">
+                                        <button class="filter-btn active" data-filter="all">All</button>
+                                        <button class="filter-btn" data-filter="available">Available</button>
+                                        <button class="filter-btn" data-filter="occupied">Occupied</button>
+                                        <button class="filter-btn" data-filter="maintenance">Maintenance</button>
+                                    </div>
+                                    <button class="btn btn-ghost btn-sm" id="refreshRooms">↺ Refresh</button>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div id="roomsGrid" class="rooms-grid"></div>
+                            </div>
+                        </div>
+
+                        <!-- Today's Arrivals -->
+                        <div class="panel">
+                            <div class="panel-header">
+                                <span class="panel-title">Today's Arrivals</span>
+                            </div>
+                            <div class="panel-body">
+                                <div id="arrivalsList"></div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
-                <div id="roomsGrid" class="rooms-grid"></div>
-            </div>
-            <div class="dashboard-card">
-                <h3>Today's Arrivals</h3>
-                <div id="arrivalsList"></div>
             </div>
         </div>
     </div>
 
+    <!-- ══════════════ SCRIPTS ══════════════ -->
     <script>
-        // Global variables
-        let currentUser = null;
-        let accessToken = localStorage.getItem('hotel7teen_token');
-
-        // API base URL
+        /* ── Config ───────────────────────────────────────────── */
         const API_BASE = 'http://localhost:3000/api';
 
-        // DOM elements
-        const loginContainer = document.getElementById('loginContainer');
-        const dashboard = document.getElementById('dashboard');
-        const loginForm = document.getElementById('loginForm');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const messageContainer = document.getElementById('messageContainer');
-        const userDisplay = document.getElementById('userDisplay');
+        /* ── State ────────────────────────────────────────────── */
+        let currentUser   = null;
+        let accessToken   = localStorage.getItem('hotel7teen_token');
+        let autoRefreshId = null;
 
-        // Initialize
+        /* ── DOM refs ─────────────────────────────────────────── */
+        const loginScreen          = document.getElementById('loginScreen');
+        const dashboardEl          = document.getElementById('dashboard');
+        const loginForm            = document.getElementById('loginForm');
+        const loginBtn             = document.getElementById('loginBtn');
+        const logoutBtn            = document.getElementById('logoutBtn');
+        const loginMsgContainer    = document.getElementById('loginMessageContainer');
+        const dashMsgContainer     = document.getElementById('dashMessageContainer');
+
+        /* ── Init ─────────────────────────────────────────────── */
         document.addEventListener('DOMContentLoaded', () => {
-            if (accessToken) {
-                verifyToken();
-            } else {
-                showLogin();
-            }
+            accessToken ? verifyToken() : showLogin();
         });
 
-        // Event listeners
         loginForm.addEventListener('submit', handleLogin);
         logoutBtn.addEventListener('click', handleLogout);
-        
-        // Room grid event listeners
         document.getElementById('refreshRooms').addEventListener('click', refreshRooms);
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', handleFilterClick);
+        document.getElementById('filterGroup').addEventListener('click', (e) => {
+            if (e.target.classList.contains('filter-btn')) handleFilterClick(e);
         });
 
-        // Functions
-        function showMessage(message, type = 'error') {
-            messageContainer.innerHTML = `
-                <div class="${type}-message">
-                    ${message}
-                </div>
-            `;
-            setTimeout(() => {
-                messageContainer.innerHTML = '';
-            }, 5000);
+        /* ── Message helpers ──────────────────────────────────── */
+        function showMessage(msg, type = 'error', container = dashMsgContainer) {
+            const cls = type === 'success' ? 'message-success' : 'message-error';
+            container.innerHTML = `<div class="message ${cls}">${msg}</div>`;
+            setTimeout(() => { container.innerHTML = ''; }, 5000);
         }
 
+        /* ── Screen transitions ───────────────────────────────── */
         function showLogin() {
-            loginContainer.style.display = 'block';
-            dashboard.style.display = 'none';
+            loginScreen.style.display  = 'flex';
+            dashboardEl.style.display  = 'none';
         }
 
         function showDashboard() {
-            loginContainer.style.display = 'none';
-            dashboard.style.display = 'block';
-            userDisplay.textContent = `${currentUser.first_name} ${currentUser.last_name} (${currentUser.position})`;
+            loginScreen.style.display = 'none';
+            dashboardEl.style.display = 'block';
+
+            const initials = `${currentUser.first_name?.[0] ?? ''}${currentUser.last_name?.[0] ?? ''}`.toUpperCase();
+            document.getElementById('userAvatar').textContent = initials || '?';
+            document.getElementById('userName').textContent   =
+                `${currentUser.first_name ?? ''} ${currentUser.last_name ?? ''}`.trim();
+            document.getElementById('userRole').textContent   = currentUser.position ?? 'Staff';
+
             loadDashboardData();
+            startAutoRefresh();
         }
 
+        /* ── Auth ─────────────────────────────────────────────── */
         async function handleLogin(e) {
             e.preventDefault();
-            const formData = new FormData(loginForm);
-            const email = formData.get('email');
-            const password = formData.get('password');
+            const data = new FormData(loginForm);
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Signing in…';
 
             try {
-                const response = await fetch(`${API_BASE}/auth/login`, {
+                const res = await fetch(`${API_BASE}/auth/login`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ email, password })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email:    data.get('email'),
+                        password: data.get('password')
+                    })
                 });
+                const json = await res.json();
+                if (!res.ok) throw new Error(json.message || 'Login failed');
 
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.message || 'Login failed');
-                }
-
-                currentUser = data.user;
-                accessToken = data.session.access_token;
+                currentUser = json.user;
+                accessToken = json.session.access_token;
                 localStorage.setItem('hotel7teen_token', accessToken);
-                
-                showMessage('Login successful!', 'success');
-                setTimeout(() => {
-                    showDashboard();
-                }, 1000);
 
-            } catch (error) {
-                showMessage(error.message);
+                showMessage('Login successful!', 'success', loginMsgContainer);
+                setTimeout(showDashboard, 800);
+
+            } catch (err) {
+                showMessage(err.message, 'error', loginMsgContainer);
+            } finally {
+                loginBtn.disabled    = false;
+                loginBtn.textContent = 'Sign In';
             }
         }
 
         async function handleLogout() {
+            stopAutoRefresh();
             try {
                 await fetch(`${API_BASE}/auth/logout`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${accessToken}`,
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json'
                     }
                 });
-            } catch (error) {
-                console.error('Logout error:', error);
-            }
-
+            } catch (_) {}
             currentUser = null;
             accessToken = null;
             localStorage.removeItem('hotel7teen_token');
             showLogin();
-            showMessage('Logged out successfully', 'success');
         }
 
         async function verifyToken() {
             try {
-                const response = await fetch(`${API_BASE}/auth/me`, {
+                const res = await fetch(`${API_BASE}/auth/me`, {
                     headers: {
                         'Authorization': `Bearer ${accessToken}`,
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json'
                     }
                 });
-
-                if (!response.ok) {
-                    throw new Error('Token verification failed');
-                }
-
-                const data = await response.json();
-                currentUser = data.user;
+                if (!res.ok) throw new Error('Token invalid');
+                const json = await res.json();
+                currentUser = json.user;
                 showDashboard();
-
-            } catch (error) {
-                console.error('Token verification error:', error);
+            } catch (_) {
                 localStorage.removeItem('hotel7teen_token');
                 accessToken = null;
                 showLogin();
             }
         }
 
+        /* ── Data loading ─────────────────────────────────────── */
         async function loadDashboardData() {
             try {
-                // Load rooms data
-                const roomsResponse = await fetch(`${API_BASE}/management/rooms`, {
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`,
-                        'Content-Type': 'application/json',
-                    }
-                });
+                const [roomsRes, arrivalsRes] = await Promise.all([
+                    fetch(`${API_BASE}/management/rooms`,    { headers: authHeaders() }),
+                    fetch(`${API_BASE}/management/arrivals/`, { headers: authHeaders() })
+                ]);
 
-                if (roomsResponse.ok) {
-                    const roomsData = await roomsResponse.json();
-                    // Store rooms data for click handler
-                    localStorage.setItem('currentRooms', JSON.stringify(roomsData.rooms));
-                    updateRoomStats(roomsData.rooms);
-                    displayRooms(roomsData.rooms);
+                if (roomsRes.ok) {
+                    const { rooms } = await roomsRes.json();
+                    localStorage.setItem('currentRooms', JSON.stringify(rooms));
+                    updateRoomStats(rooms);
+                    displayRooms(rooms);
                 }
 
-                // Load arrivals data
-                const arrivalsResponse = await fetch(`${API_BASE}/management/arrivals/`, {
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`,
-                        'Content-Type': 'application/json',
-                    }
-                });
-
-                if (arrivalsResponse.ok) {
-                    const arrivalsData = await arrivalsResponse.json();
+                if (arrivalsRes.ok) {
+                    const arrivalsData = await arrivalsRes.json();
                     updateArrivalsStats(arrivalsData);
                     displayArrivals(arrivalsData.arrivals);
                 }
 
-            } catch (error) {
-                console.error('Error loading dashboard data:', error);
+            } catch (err) {
+                console.error('Dashboard load error:', err);
                 showMessage('Error loading dashboard data');
             }
         }
 
+        function authHeaders() {
+            return {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            };
+        }
+
+        /* ── Stats ────────────────────────────────────────────── */
         function updateRoomStats(rooms) {
-            const totalRooms = rooms.length;
-            const availableRooms = rooms.filter(room => room.status === 'Available').length;
-            const occupiedRooms = rooms.filter(room => room.status === 'Occupied').length;
-
-            document.getElementById('totalRooms').textContent = totalRooms;
-            document.getElementById('availableRooms').textContent = availableRooms;
-            document.getElementById('occupiedRooms').textContent = occupiedRooms;
+            document.getElementById('totalRooms').textContent     = rooms.length;
+            document.getElementById('availableRooms').textContent =
+                rooms.filter(r => r.status === 'Available').length;
+            document.getElementById('occupiedRooms').textContent  =
+                rooms.filter(r => r.status === 'Occupied').length;
         }
 
-        function updateArrivalsStats(arrivalsData) {
-            document.getElementById('todayArrivals').textContent = arrivalsData.total_arrivals;
+        function updateArrivalsStats(data) {
+            document.getElementById('todayArrivals').textContent = data.total_arrivals ?? 0;
         }
 
+        /* ── Rooms display ────────────────────────────────────── */
         function displayRooms(rooms) {
-            const roomsGrid = document.getElementById('roomsGrid');
-            const currentFilter = document.querySelector('.filter-btn.active').dataset.filter;
-            
-            const filteredRooms = currentFilter === 'all' 
-                ? rooms 
-                : rooms.filter(room => room.status.toLowerCase() === currentFilter);
-            
-            roomsGrid.innerHTML = filteredRooms.map(room => `
-                <div class="room-card ${room.status.toLowerCase()}" data-room-id="${room.id}">
-                    <div class="room-floor">Floor ${room.floor_number}</div>
-                    <div class="room-header">
-                        <div class="room-number">${room.room_number}</div>
-                        <div class="room-status ${room.status.toLowerCase()}">${room.status}</div>
-                    </div>
-                    <div class="room-details">
-                        <div class="room-type">${room.room_type}</div>
-                        <div class="room-price">$${room.price_per_night}/night</div>
-                        <div>Capacity: ${room.capacity} guests</div>
-                        ${room.current_booking ? `
-                            <div class="room-guest">
-                                <strong>Guest:</strong> ${room.current_booking.guest_name}<br>
-                                <strong>Until:</strong> ${new Date(room.current_booking.check_out_date).toLocaleDateString()}
-                            </div>
-                        ` : ''}
-                    </div>
-                </div>
-            `).join('');
-            
-            // Add click handlers for room cards
-            document.querySelectorAll('.room-card').forEach(card => {
-                card.addEventListener('click', () => handleRoomClick(card.dataset.roomId));
-            });
-        }
+            const grid   = document.getElementById('roomsGrid');
+            const filter = document.querySelector('.filter-btn.active')?.dataset.filter ?? 'all';
+            const list   = filter === 'all'
+                ? rooms
+                : rooms.filter(r => r.status.toLowerCase() === filter);
 
-        function displayArrivals(arrivals) {
-            const arrivalsList = document.getElementById('arrivalsList');
-            if (arrivals.length === 0) {
-                arrivalsList.innerHTML = '<p>No arrivals today</p>';
+            if (!list.length) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column:1/-1">
+                        <div class="empty-state-icon">🛏</div>
+                        <p>No rooms match this filter.</p>
+                    </div>`;
                 return;
             }
 
-            arrivalsList.innerHTML = arrivals.map(arrival => `
-                <div style="padding: 0.5rem; border-bottom: 1px solid #eee;">
-                    <strong>${arrival.guest_name}</strong><br>
-                    Room ${arrival.room.number} (${arrival.room.type})<br>
-                    Guests: ${arrival.number_of_guests}
-                </div>
-            `).join('');
+            grid.innerHTML = list.map(room => {
+                const statusCls = room.status.toLowerCase();
+                return `
+                <div class="room-card ${statusCls}" data-room-id="${room.id}">
+                    <div class="room-floor-badge">FL ${room.floor_number}</div>
+                    <div class="room-header">
+                        <div class="room-number">${room.room_number}</div>
+                        <span class="room-status-badge ${statusCls}">${room.status}</span>
+                    </div>
+                    <div class="room-details">
+                        <div class="room-type-label">${room.room_type}</div>
+                        <div class="room-price-label">₦${Number(room.price_per_night).toLocaleString()}/night</div>
+                        <div style="margin-top:0.2rem">Capacity: ${room.capacity} guest${room.capacity !== 1 ? 's' : ''}</div>
+                        ${room.current_booking ? `
+                        <div class="room-guest-info">
+                            <strong>${room.current_booking.guest_name}</strong><br>
+                            Until ${new Date(room.current_booking.check_out_date).toLocaleDateString('en-GB',{ day:'numeric', month:'short' })}
+                        </div>` : ''}
+                    </div>
+                </div>`;
+            }).join('');
+
+            grid.querySelectorAll('.room-card').forEach(card =>
+                card.addEventListener('click', () => handleRoomClick(card.dataset.roomId))
+            );
         }
 
-        function getStatusColor(status) {
-            const colors = {
-                'Available': '#28a745',
-                'Occupied': '#dc3545',
-                'Maintenance': '#ffc107',
-                'Reserved': '#17a2b8',
-                'Dirty': '#6c757d'
-            };
-            return colors[status] || '#333';
+        /* ── Arrivals display ─────────────────────────────────── */
+        function displayArrivals(arrivals) {
+            const list = document.getElementById('arrivalsList');
+            if (!arrivals || !arrivals.length) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🧳</div>
+                        <p>No arrivals today.</p>
+                    </div>`;
+                return;
+            }
+
+            list.innerHTML = arrivals.map(a => {
+                const initials = (a.guest_name ?? '?').split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+                return `
+                <div class="arrival-item">
+                    <div class="arrival-avatar">${initials}</div>
+                    <div class="arrival-body">
+                        <div class="arrival-name">${a.guest_name}</div>
+                        <div class="arrival-meta">
+                            ${a.number_of_guests} guest${a.number_of_guests !== 1 ? 's' : ''}
+                        </div>
+                    </div>
+                    <span class="arrival-room-badge">Rm ${a.room.number}</span>
+                </div>`;
+            }).join('');
         }
 
-        // Room grid functions
+        /* ── Room interaction ─────────────────────────────────── */
+        function handleRoomClick(roomId) {
+            const rooms = JSON.parse(localStorage.getItem('currentRooms') || '[]');
+            const room  = rooms.find(r => r.id === roomId);
+            if (!room) return;
+            alert([
+                `Room ${room.room_number}`,
+                `Type: ${room.room_type}`,
+                `Status: ${room.status}`,
+                `Price: ₦${Number(room.price_per_night).toLocaleString()}/night`,
+                `Capacity: ${room.capacity} guests`,
+                `Floor: ${room.floor_number}`,
+                room.current_booking ? `Guest: ${room.current_booking.guest_name}` : ''
+            ].filter(Boolean).join('\n'));
+        }
+
+        /* ── Filter ───────────────────────────────────────────── */
         function handleFilterClick(e) {
-            // Update active filter button
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             e.target.classList.add('active');
-            
-            // Re-display rooms with new filter
-            loadDashboardData();
+            const rooms = JSON.parse(localStorage.getItem('currentRooms') || '[]');
+            displayRooms(rooms);
         }
 
+        /* ── Refresh ──────────────────────────────────────────── */
         async function refreshRooms() {
-            const refreshBtn = document.getElementById('refreshRooms');
-            refreshBtn.disabled = true;
-            refreshBtn.textContent = 'Refreshing...';
-            
+            const btn = document.getElementById('refreshRooms');
+            btn.disabled     = true;
+            btn.textContent  = '↺ Refreshing…';
             try {
                 await loadDashboardData();
-                showMessage('Room status refreshed successfully', 'success');
-            } catch (error) {
-                showMessage('Error refreshing room status');
+                showMessage('Room status refreshed', 'success');
+            } catch (_) {
+                showMessage('Error refreshing rooms');
             } finally {
-                refreshBtn.disabled = false;
-                refreshBtn.textContent = 'Refresh Status';
+                btn.disabled    = false;
+                btn.textContent = '↺ Refresh';
             }
         }
 
-        function handleRoomClick(roomId) {
-            // Show room details modal or navigate to room details
-            // For now, just show a simple alert with room info
-            const rooms = JSON.parse(localStorage.getItem('currentRooms') || '[]');
-            const room = rooms.find(r => r.id === roomId);
-            
-            if (room) {
-                const message = `
-                    Room ${room.room_number}
-                    Type: ${room.room_type}
-                    Status: ${room.status}
-                    Price: $${room.price_per_night}/night
-                    Capacity: ${room.capacity} guests
-                    Floor: ${room.floor_number}
-                    ${room.current_booking ? `Guest: ${room.current_booking.guest_name}` : ''}
-                `;
-                alert(message.trim());
-            }
-        }
-
-        // Auto-refresh functionality
-        let autoRefreshInterval = null;
-
+        /* ── Auto-refresh ─────────────────────────────────────── */
         function startAutoRefresh() {
-            // Refresh every 30 seconds
-            autoRefreshInterval = setInterval(async () => {
-                try {
-                    await loadDashboardData();
-                    console.log('Dashboard auto-refreshed');
-                } catch (error) {
-                    console.error('Auto-refresh error:', error);
-                }
+            autoRefreshId = setInterval(() => {
+                loadDashboardData().catch(console.error);
             }, 30000);
         }
 
         function stopAutoRefresh() {
-            if (autoRefreshInterval) {
-                clearInterval(autoRefreshInterval);
-                autoRefreshInterval = null;
-            }
+            clearInterval(autoRefreshId);
+            autoRefreshId = null;
         }
-
-        // Update showDashboard to start auto-refresh
-        const originalShowDashboard = showDashboard;
-        showDashboard = function() {
-            originalShowDashboard();
-            startAutoRefresh();
-        };
-
-        // Update handleLogout to stop auto-refresh
-        const originalHandleLogout = handleLogout;
-        handleLogout = async function() {
-            stopAutoRefresh();
-            await originalHandleLogout();
-        };
     </script>
+
 </body>
 </html>

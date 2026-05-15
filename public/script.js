@@ -3,7 +3,7 @@
 //  Single, conflict-free script for all shared page behaviour.
 // ============================================================
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
 
     // --------------------------------------------------------
     // 1. Hamburger menu
@@ -143,6 +143,88 @@ document.addEventListener('DOMContentLoaded', function () {
     // --------------------------------------------------------
     if (window.location.pathname.includes('rooms.html') || document.querySelector('.rooms-grid')) {
         loadRooms();
+    }
+
+    // --------------------------------------------------------
+    // 9. Admin login form handling
+    // --------------------------------------------------------
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            if (!email || !password) {
+                showNotification('Please fill in all fields', 'error');
+                return;
+            }
+
+            const submitBtn = this.querySelector('.submit-btn');
+            const origText = submitBtn.textContent;
+            submitBtn.textContent = 'Logging in...';
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('staffToken', data.session.access_token);
+                    localStorage.setItem('staffRefreshToken', data.session.refresh_token);
+                    localStorage.setItem('staffUser', JSON.stringify(data.user));
+                    showNotification('Login successful!', 'success');
+                    document.getElementById('auth-section').style.display = 'none';
+                    document.getElementById('dashboard-section').style.display = 'block';
+                    document.getElementById('welcome-message').textContent = `Welcome, ${data.user.first_name}`;
+                } else {
+                    showNotification(data.message || 'Login failed', 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showNotification('Failed to connect to server', 'error');
+            } finally {
+                submitBtn.textContent = origText;
+                submitBtn.disabled = false;
+            }
+        });
+    }
+
+    // --------------------------------------------------------
+    // 10. Check for existing admin session on page load
+    // --------------------------------------------------------
+    const staffToken = localStorage.getItem('staffToken');
+    const staffUser = localStorage.getItem('staffUser');
+    if (staffToken && staffUser && document.getElementById('auth-section')) {
+        try {
+            const response = await fetch('/api/auth/me', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${staffToken}`
+                }
+            });
+
+            if (response.ok) {
+                const user = JSON.parse(staffUser);
+                document.getElementById('auth-section').style.display = 'none';
+                document.getElementById('dashboard-section').style.display = 'block';
+                document.getElementById('welcome-message').textContent = `Welcome, ${user.first_name}`;
+            } else {
+                localStorage.removeItem('staffToken');
+                localStorage.removeItem('staffRefreshToken');
+                localStorage.removeItem('staffUser');
+            }
+        } catch (error) {
+            console.error('Session check error:', error);
+        }
     }
 });
 
@@ -444,6 +526,21 @@ function createRoomCard(room, index) {
     return card;
 }
 
+
+// ============================================================
+//  Admin logout function
+// ============================================================
+function handleLogout() {
+    localStorage.removeItem('staffToken');
+    localStorage.removeItem('staffRefreshToken');
+    localStorage.removeItem('staffUser');
+    showNotification('Logged out successfully', 'info');
+    
+    const authSection = document.getElementById('auth-section');
+    const dashboardSection = document.getElementById('dashboard-section');
+    if (authSection) authSection.style.display = 'block';
+    if (dashboardSection) dashboardSection.style.display = 'none';
+}
 
 // ============================================================
 //  Shared API service (available to booking.js and other modules)
