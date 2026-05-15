@@ -48,6 +48,14 @@ export function initializeHeader() {
             navLinks.classList.toggle('active');
             hamburger.classList.toggle('active');
         });
+
+        // Close menu when any nav link is tapped on mobile
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
     }
     
     // Active page indicator

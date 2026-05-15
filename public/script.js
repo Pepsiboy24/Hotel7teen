@@ -7,23 +7,11 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // --------------------------------------------------------
     // 1. Hamburger menu
+    //    Handled entirely by initializeHeader() in header.js.
+    //    The duplicate listeners here were causing every click
+    //    to double-toggle (add then immediately remove 'active'),
+    //    so the menu never opened. Removed from here.
     // --------------------------------------------------------
-    const hamburger = document.querySelector('.hamburger');
-    const navLinks  = document.querySelector('.nav-links');
-
-    if (hamburger && navLinks) {
-        hamburger.addEventListener('click', function () {
-            hamburger.classList.toggle('active');
-            navLinks.classList.toggle('active');
-        });
-
-        navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                hamburger.classList.remove('active');
-                navLinks.classList.remove('active');
-            });
-        });
-    }
 
     // --------------------------------------------------------
     // 2. Smooth-scroll for in-page anchor links ONLY
